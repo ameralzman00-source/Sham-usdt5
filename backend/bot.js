@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const TelegramBot = require("node-telegram-bot-api");
 const {
   db,
@@ -113,8 +115,20 @@ function apkUrl() {
   return `${webAppUrl()}/download/android`;
 }
 
+function androidApkPath() {
+  const candidates = [
+    path.join(__dirname, "..", "releases", "usdt-sham.apk"),
+    path.join(process.cwd(), "releases", "usdt-sham.apk"),
+    path.join(__dirname, "..", "frontend", "dist", "usdt-sham.apk"),
+    path.join(process.cwd(), "frontend", "dist", "usdt-sham.apk"),
+    path.join(__dirname, "..", "releases", "usdt-sham-v1.apk"),
+    path.join(process.cwd(), "releases", "usdt-sham-v1.apk")
+  ];
+  return candidates.find((file) => fs.existsSync(file)) || "";
+}
+
 function apkButton(text) {
-  return { text: text || "تحميل التطبيق", url: apkUrl() };
+  return { text: text || "تحميل التطبيق", callback_data: "apkdl" };
 }
 
 function isAdminUser(user) {
@@ -203,6 +217,29 @@ if (!TOKEN) {
 } else {
   const bot = new TelegramBot(TOKEN, { polling: true });
 
+  async function sendApkFile(chatId) {
+    const file = androidApkPath();
+    if (!file) {
+      return bot.sendMessage(
+        chatId,
+        "ملف التطبيق غير متوفر حالياً. جرّب التحميل من الموقع:\n" + apkUrl()
+      );
+    }
+    await bot.sendChatAction(chatId, "upload_document");
+    return bot.sendDocument(
+      chatId,
+      fs.createReadStream(file),
+      {
+        caption: "تطبيق USDT شام لأندرويد.\nبعد التحميل افتح الملف من المحادثة وثبّته. إن ظهر تحذير المصادر غير المعروفة فاسمح به من إعدادات الهاتف.",
+        disable_content_type_detection: true
+      },
+      {
+        filename: "usdt-sham.apk",
+        contentType: "application/vnd.android.package-archive"
+      }
+    );
+  }
+
   function applyWebAppMenu() {
     bot.setChatMenuButton({
       menu_button: { type: "web_app", text: "المنصة", web_app: { url: webAppUrl() } }
@@ -236,8 +273,8 @@ if (!TOKEN) {
       `أهلاً ${user.displayName}\nمنصة USDT شام لتداول التيثر في سوريا.\nشراء وبيع USDT مقابل الليرة السورية أو الدولار عبر شام كاش.${extra}\nاضغط فتح المنصة لدخول الموقع داخل تلغرام.`,
       { reply_markup: mainKeyboard(user) }
     );
-    bot.sendMessage(msg.chat.id, "التطبيق المصغّر وتطبيق أندرويد:", {
-      reply_markup: { inline_keyboard: [[webAppButton("فتح المنصة")], [apkButton("تحميل تطبيق أندرويد")]] }
+    bot.sendMessage(msg.chat.id, "افتح المنصة داخل تلغرام، أو اطلب التطبيق ليُرسل إليك كملف داخل المحادثة:", {
+      reply_markup: { inline_keyboard: [[webAppButton("فتح المنصة")], [apkButton("إرسال تطبيق أندرويد")]] }
     });
   });
 
@@ -931,10 +968,8 @@ if (!TOKEN) {
       });
     }
     if (text === "تحميل التطبيق") {
-      return bot.sendMessage(
-        msg.chat.id,
-        "حمّل تطبيق USDT شام لأندرويد (APK).\nإن ظهر تحذير التثبيت من مصادر غير معروفة فاسمح به من إعدادات الهاتف.",
-        { reply_markup: { inline_keyboard: [[apkButton("تحميل تطبيق أندرويد")]] } }
+      return sendApkFile(msg.chat.id).catch(() =>
+        bot.sendMessage(msg.chat.id, "تعذر إرسال الملف داخل تلغرام. حمّله من هنا:\n" + apkUrl())
       );
     }
     if (text === "لوحة الإدارة") {
@@ -950,6 +985,13 @@ if (!TOKEN) {
       return bot.answerCallbackQuery(q.id, { text: downMessage(), show_alert: true });
     }
     const [action, id, extra] = (q.data || "").split(":");
+
+    if (action === "apkdl") {
+      bot.answerCallbackQuery(q.id, { text: "جاري إرسال التطبيق..." });
+      return sendApkFile(msg.chat.id).catch(() =>
+        bot.sendMessage(msg.chat.id, "تعذر إرسال الملف داخل تلغرام. حمّله من هنا:\n" + apkUrl())
+      );
+    }
 
     if (action === "support") {
       bot.answerCallbackQuery(q.id);
