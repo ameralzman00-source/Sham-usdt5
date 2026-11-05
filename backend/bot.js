@@ -127,6 +127,28 @@ function androidApkPath() {
   return candidates.find((file) => fs.existsSync(file)) || "";
 }
 
+function androidZipPath() {
+  const candidates = [
+    path.join(__dirname, "..", "releases", "usdt-sham.zip"),
+    path.join(process.cwd(), "releases", "usdt-sham.zip"),
+    path.join(__dirname, "..", "frontend", "dist", "usdt-sham.zip"),
+    path.join(process.cwd(), "frontend", "dist", "usdt-sham.zip")
+  ];
+  const existing = candidates.find((file) => fs.existsSync(file));
+  if (existing) return existing;
+  const apk = androidApkPath();
+  if (!apk) return "";
+  const out = path.join(path.dirname(apk), "usdt-sham.zip");
+  try {
+    const { spawnSync } = require("child_process");
+    const packed = spawnSync("python3", ["-c", "import zipfile,sys; z=zipfile.ZipFile(sys.argv[2],'w',zipfile.ZIP_DEFLATED); z.write(sys.argv[1],'usdt-sham.apk'); z.close()", apk, out], { encoding: "utf8" });
+    if (packed.status === 0 && fs.existsSync(out)) return out;
+  } catch {
+    /* ignore */
+  }
+  return "";
+}
+
 function apkButton(text) {
   return { text: text || "تحميل التطبيق", callback_data: "apkdl" };
 }
@@ -218,25 +240,38 @@ if (!TOKEN) {
   const bot = new TelegramBot(TOKEN, { polling: true });
 
   async function sendApkFile(chatId) {
-    const file = androidApkPath();
-    if (!file) {
+    const zip = androidZipPath();
+    const apk = androidApkPath();
+    if (!zip && !apk) {
       return bot.sendMessage(
         chatId,
-        "ملف التطبيق غير متوفر حالياً. جرّب التحميل من الموقع:\n" + apkUrl()
+        "ملف التطبيق غير متوفر حالياً. حمّله من الموقع:\n" + apkUrl()
       );
     }
     await bot.sendChatAction(chatId, "upload_document");
-    return bot.sendDocument(
-      chatId,
-      fs.createReadStream(file),
-      {
-        caption: "تطبيق USDT شام لأندرويد.\nبعد التحميل افتح الملف من المحادثة وثبّته. إن ظهر تحذير المصادر غير المعروفة فاسمح به من إعدادات الهاتف.",
-        disable_content_type_detection: true
-      },
-      {
-        filename: "usdt-sham.apk",
-        contentType: "application/vnd.android.package-archive"
+    const caption = [
+      "تطبيق USDT شام لأندرويد.",
+      "تلغرام يمنع إرسال APK مباشرة، لذلك الملف مضغوط ZIP.",
+      "1) احذف أي نسخة قديمة من التطبيق.",
+      "2) افتح الملف من هذه المحادثة وفك الضغط.",
+      "3) ثبّت usdt-sham.apk واسمح بالمصادر غير المعروفة إن طُلب."
+    ].join("\n");
+    try {
+      if (zip) {
+        await bot.sendDocument(
+          chatId,
+          fs.createReadStream(zip),
+          { caption, disable_content_type_detection: true },
+          { filename: "usdt-sham-android.zip", contentType: "application/zip" }
+        );
+        return;
       }
+    } catch (err) {
+      console.log("telegram zip send failed:", err && err.message);
+    }
+    return bot.sendMessage(
+      chatId,
+      `${caption}\n\nرابط التحميل:\n${apkUrl()}`
     );
   }
 

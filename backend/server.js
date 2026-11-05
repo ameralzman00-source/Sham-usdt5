@@ -3124,8 +3124,31 @@ function sendAndroidApk(_req, res) {
   return res.sendFile(path.resolve(file));
 }
 
+function androidZipFile() {
+  const candidates = [
+    path.join(__dirname, "..", "releases", "usdt-sham.zip"),
+    path.join(process.cwd(), "releases", "usdt-sham.zip"),
+    path.join(__dirname, "..", "frontend", "dist", "usdt-sham.zip"),
+    path.join(process.cwd(), "frontend", "dist", "usdt-sham.zip")
+  ];
+  return candidates.find((file) => fs.existsSync(file)) || "";
+}
+
+function sendAndroidZip(_req, res) {
+  const file = androidZipFile();
+  if (!file) {
+    return sendAndroidApk(_req, res);
+  }
+  res.setHeader("Content-Type", "application/zip");
+  res.setHeader("Content-Disposition", 'attachment; filename="usdt-sham-android.zip"');
+  res.setHeader("Cache-Control", "public, max-age=3600");
+  return res.sendFile(path.resolve(file));
+}
+
 app.get(["/download/android", "/download/android.apk", "/download/usdt-sham.apk", "/usdt-sham.apk"], sendAndroidApk);
 app.head(["/download/android", "/download/android.apk", "/download/usdt-sham.apk", "/usdt-sham.apk"], sendAndroidApk);
+app.get(["/download/android.zip", "/download/usdt-sham.zip"], sendAndroidZip);
+app.head(["/download/android.zip", "/download/usdt-sham.zip"], sendAndroidZip);
 
 if (fs.existsSync(FRONTEND_DIST)) {
   app.use(express.static(FRONTEND_DIST));

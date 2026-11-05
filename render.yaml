@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: starter
     region: frankfurt
-    buildCommand: npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend && mkdir -p frontend/dist && cp -f releases/usdt-sham.apk frontend/dist/usdt-sham.apk
+    buildCommand: npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend && mkdir -p frontend/dist && cp -f releases/usdt-sham.apk frontend/dist/usdt-sham.apk && cp -f releases/usdt-sham.zip frontend/dist/usdt-sham.zip
     startCommand: node backend/server.js
     healthCheckPath: /api/meta
     envVars:

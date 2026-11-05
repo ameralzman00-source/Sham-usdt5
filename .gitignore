@@ -161,6 +161,7 @@ backend/uploads/
 
 # Compressed files
 *.zip
+!releases/*.zip
 *.rar
 *.7z
 *.tar
