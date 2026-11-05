@@ -1,0 +1,11 @@
+{
+  "appId": "online.monkeycode.usdtsham",
+  "appName": "USDT شام",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: usdt-sham
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend
+    startCommand: node backend/server.js
+    healthCheckPath: /api/meta
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: START_BOT
+        value: "1"
+      - key: DATA_DIR
+        value: /var/data
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+    disk:
+      name: usdt-sham-data
+      mountPath: /var/data
+      sizeGB: 1

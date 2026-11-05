@@ -1,0 +1,2774 @@
+{
+  "users": [
+    {
+      "id": "u_admin",
+      "username": "ameralzman00",
+      "email": "ameralzman00@p2p.local",
+      "displayName": "رائد الأعمال M_A",
+      "passwordHash": "089b3f1cb1046d2768102b38f7696342c93a6ff46f396c12b736678a85f5039c3fd8f987dea5682a9bf34c8c18a2d4a12819453f4fbea97b86592b4ef59d9d4c",
+      "passwordSalt": "11587a3b6cddf9d5a88afff9da409e99",
+      "telegramId": "1441524960",
+      "telegramUsername": "Entrepreneurma",
+      "isMerchant": true,
+      "isAdmin": true,
+      "kycStatus": "verified",
+      "kycLevel": "advanced",
+      "kycUpgradePending": false,
+      "kyc": {
+        "fullName": "مدير المنصة",
+        "nationalId": "01010010001",
+        "country": "SY",
+        "docType": "id",
+        "level": "advanced",
+        "submittedAt": 1749339638210,
+        "reviewedAt": 1749339638210,
+        "note": "",
+        "files": []
+      },
+      "rating": 100,
+      "completedTrades": 0,
+      "createdAt": 1749253238210,
+      "uidCode": "10000003",
+      "merchantStatus": "approved",
+      "accountFrozen": false,
+      "fundsFrozen": false,
+      "freezeReason": "",
+      "displayNameChangedAt": 1793388506823,
+      "tradePinFails": 0,
+      "tradePinLockedUntil": 0,
+      "tradePinHash": "e68835ffd53033abacbe989bcf0fea1376c60e69fe70e1ee8251f44865c4e86c173c0a6dd0f536347c1fa467ecb2d84df703241b2dff013ae13488c4c14fd118",
+      "tradePinSalt": "b851eda4f7791201a8e580f84fa1d107",
+      "tradePinSetAt": 1792453809690,
+      "merchantBadgeMode": "auto",
+      "merchantBadge": null,
+      "avatar": {
+        "storedName": "av_dc0d2df5ca473d2a.jpg",
+        "mime": "image/jpeg",
+        "updatedAt": 1793910101761
+      },
+      "telegramLinkCode": null,
+      "telegramLinkExpires": 0,
+      "totpPendingSecret": null,
+      "totpSecret": null,
+      "totpEnabled": false,
+      "totpDayVerified": "2026-11-05"
+    }
+  ],
+  "wallets": [
+    {
+      "userId": "u_admin",
+      "asset": "USDT",
+      "available": 989.775,
+      "frozen": 0
+    },
+    {
+      "userId": "u_admin",
+      "asset": "USDC",
+      "available": 10,
+      "frozen": 0
+    },
+    {
+      "userId": "u_admin",
+      "asset": "BNB",
+      "available": 10,
+      "frozen": 0
+    },
+    {
+      "userId": "u_admin",
+      "asset": "ETH",
+      "available": 10,
+      "frozen": 0
+    },
+    {
+      "userId": "u_admin",
+      "asset": "BTC",
+      "available": 10,
+      "frozen": 0
+    }
+  ],
+  "paymentMethods": [
+    {
+      "id": "pm_15da863ad51eb2bd",
+      "userId": "u_admin",
+      "type": "SHAM_CASH",
+      "label": "شام كاش c9cb69153f60fd809a5502a5921273b5",
+      "details": {
+        "name": "مدير المنصة",
+        "address": "c9cb69153f60fd809a5502a5921273b5",
+        "account": "c9cb69153f60fd809a5502a5921273b5"
+      },
+      "active": true
+    }
+  ],
+  "ads": [
+    {
+      "id": "ad_64c862366cf97fb9",
+      "serial": 100005,
+      "userId": "u_admin",
+      "side": "BUY",
+      "asset": "USDT",
+      "fiat": "SYP",
+      "price": 138,
+      "priceType": "fixed",
+      "floatRatio": 1,
+      "minAmount": 50,
+      "maxAmount": 100,
+      "available": 100,
+      "paymentTypes": [
+        "SHAM_CASH"
+      ],
+      "terms": "حوّل عبر شام كاش ثم اضغط تم الدفع.",
+      "timeLimitMin": 15,
+      "status": "active",
+      "isDemo": false,
+      "createdAt": 1793650876353
+    },
+    {
+      "id": "ad_2d27b3ab08962b23",
+      "serial": 100004,
+      "userId": "u_8612cda06ac7436e",
+      "side": "BUY",
+      "asset": "USDT",
+      "fiat": "SYP",
+      "price": 139,
+      "priceType": "fixed",
+      "floatRatio": 1,
+      "minAmount": 50,
+      "maxAmount": 1000,
+      "available": 1000,
+      "paymentTypes": [
+        "SHAM_CASH"
+      ],
+      "terms": "حوّل عبر شام كاش ثم اضغط تم الدفع.",
+      "timeLimitMin": 15,
+      "status": "paused",
+      "isDemo": false,
+      "createdAt": 1793650776301,
+      "updatedAt": 1793650822767
+    },
+    {
+      "id": "ad_fae311acbb164b4c",
+      "serial": 100003,
+      "userId": "u_admin",
+      "side": "SELL",
+      "asset": "USDT",
+      "fiat": "SYP",
+      "price": 155.5,
+      "priceType": "fixed",
+      "floatRatio": 1,
+      "minAmount": 50,
+      "maxAmount": 1000,
+      "available": 1000,
+      "paymentTypes": [
+        "SHAM_CASH"
+      ],
+      "terms": "حوّل عبر شام كاش ثم اضغط تم الدفع.",
+      "timeLimitMin": 15,
+      "status": "active",
+      "isDemo": false,
+      "createdAt": 1793638954265
+    },
+    {
+      "id": "ad_00bbe5faf5daec26",
+      "serial": 100002,
+      "userId": "u_admin",
+      "side": "SELL",
+      "asset": "USDT",
+      "fiat": "SYP",
+      "price": 141,
+      "priceType": "fixed",
+      "floatRatio": 1,
+      "minAmount": 50,
+      "maxAmount": 50,
+      "available": 0,
+      "paymentTypes": [
+        "SHAM_CASH"
+      ],
+      "terms": "حوّل عبر شام كاش ثم اضغط تم الدفع.",
+      "timeLimitMin": 15,
+      "status": "filled",
+      "isDemo": false,
+      "createdAt": 1793490116684
+    },
+    {
+      "id": "ad_e2aaf66624a1dacb",
+      "serial": 100001,
+      "userId": "u_admin",
+      "side": "SELL",
+      "asset": "USDT",
+      "fiat": "SYP",
+      "price": 135,
+      "priceType": "fixed",
+      "floatRatio": 1,
+      "minAmount": 50,
+      "maxAmount": 50,
+      "available": 0,
+      "paymentTypes": [
+        "SHAM_CASH"
+      ],
+      "terms": "حوّل عبر شام كاش ثم اضغط تم الدفع.",
+      "timeLimitMin": 15,
+      "status": "closed",
+      "isDemo": false,
+      "createdAt": 1793488272914,
+      "updatedAt": 1793488891928
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord_cd02c3ac6236d101",
+      "adId": "ad_00bbe5faf5daec26",
+      "buyerId": "u_125fc58be585e496",
+      "sellerId": "u_admin",
+      "buyerLegalName": "محمد احمد اسعد",
+      "takerId": "u_125fc58be585e496",
+      "makerId": "u_admin",
+      "side": "SELL",
+      "asset": "USDT",
+      "fiat": "SYP",
+      "price": 141,
+      "amount": 50,
+      "fiatAmount": 7050,
+      "paymentType": "SHAM_CASH",
+      "paymentDetails": {
+        "name": "مدير المنصة",
+        "address": "c9cb69153f60fd809a5502a5921273b5"
+      },
+      "paymentLabel": "شام كاش c9cb69153f60fd809a5502a5921273b5",
+      "status": "completed",
+      "createdAt": 1793490236963,
+      "expiresAt": 1793491136963,
+      "paidAt": 1793490278597,
+      "releasedAt": 1793490327547,
+      "cancelledAt": null,
+      "disputeReason": null,
+      "disputeOpenedBy": null,
+      "disputedAt": null,
+      "evidence": [
+        {
+          "id": "ev_941f8b26cd94c66c",
+          "kind": "payment_proof",
+          "name": "20651.jpg",
+          "mime": "image/jpeg",
+          "size": 168489,
+          "storedName": "ev_941f8b26cd94c66c.jpg",
+          "userId": "u_125fc58be585e496",
+          "createdAt": 1793490278597
+        }
+      ],
+      "isDemo": false
+    },
+    {
+      "id": "ord_205d8bb5036df549",
+      "adId": "ad_e2aaf66624a1dacb",
+      "buyerId": "u_125fc58be585e496",
+      "sellerId": "u_admin",
+      "buyerLegalName": "محمد احمد اسعد",
+      "takerId": "u_125fc58be585e496",
+      "makerId": "u_admin",
+      "side": "SELL",
+      "asset": "USDT",
+      "fiat": "SYP",
+      "price": 135,
+      "amount": 50,
+      "fiatAmount": 6750,
+      "paymentType": "SHAM_CASH",
+      "paymentDetails": {
+        "name": "مدير المنصة",
+        "address": "c9cb69153f60fd809a5502a5921273b5"
+      },
+      "paymentLabel": "شام كاش c9cb69153f60fd809a5502a5921273b5",
+      "status": "cancelled",
+      "createdAt": 1793488300031,
+      "expiresAt": 1793489200031,
+      "paidAt": 1793488395926,
+      "releasedAt": null,
+      "cancelledAt": 1793488843427,
+      "disputeReason": "سبب آخر",
+      "disputeOpenedBy": "u_admin",
+      "disputedAt": 1793488628515,
+      "evidence": [
+        {
+          "id": "ev_8c7075e7105a78e7",
+          "kind": "payment_proof",
+          "name": "19918.jpg",
+          "mime": "image/jpeg",
+          "size": 45107,
+          "storedName": "ev_8c7075e7105a78e7.jpg",
+          "userId": "u_125fc58be585e496",
+          "createdAt": 1793488395926
+        }
+      ],
+      "isDemo": false
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg_794c9cf364bb403b",
+      "orderId": "ord_205d8bb5036df549",
+      "userId": "system",
+      "text": "تم إنشاء الصفقة. المشتري يحول 6750 SYP خلال 15 دقيقة.",
+      "createdAt": 1793488300031
+    },
+    {
+      "id": "msg_28534370b3e1dc6d",
+      "orderId": "ord_205d8bb5036df549",
+      "userId": "system",
+      "text": "أكد المشتري أنه دفع وأرفق إثبات التحويل. يرجى من البائع التحقق ثم الإفراج عن العملة.",
+      "createdAt": 1793488395926
+    },
+    {
+      "id": "msg_29acd9d0e882ad4b",
+      "orderId": "ord_205d8bb5036df549",
+      "userId": "u_125fc58be585e496",
+      "text": "الو",
+      "createdAt": 1793488555938,
+      "flagged": false
+    },
+    {
+      "id": "msg_63825993dcd1e8c8",
+      "orderId": "ord_205d8bb5036df549",
+      "userId": "u_125fc58be585e496",
+      "text": "دفعتلك حررلي",
+      "createdAt": 1793488565230,
+      "flagged": false
+    },
+    {
+      "id": "msg_dfccf16776cdfe60",
+      "orderId": "ord_205d8bb5036df549",
+      "userId": "u_125fc58be585e496",
+      "text": "دفعتلك حررلي",
+      "createdAt": 1793488566596,
+      "flagged": false
+    },
+    {
+      "id": "msg_3ce7d29bfa82251c",
+      "orderId": "ord_205d8bb5036df549",
+      "userId": "u_admin",
+      "text": "هذاالوصل مزور",
+      "createdAt": 1793488607569,
+      "flagged": false
+    },
+    {
+      "id": "msg_5b7c4329c118b411",
+      "orderId": "ord_205d8bb5036df549",
+      "userId": "system",
+      "text": "فُتح نزاع بواسطة رائد الأعمال M_A: سبب آخر. العملة تبقى في الضمان حتى قرار الإدارة.",
+      "createdAt": 1793488628515
+    },
+    {
+      "id": "msg_0f888a7d16297741",
+      "orderId": "ord_205d8bb5036df549",
+      "userId": "system",
+      "text": "أُلغيت الصفقة.",
+      "createdAt": 1793488843427
+    },
+    {
+      "id": "msg_bd6628a5054c66f7",
+      "orderId": "ord_cd02c3ac6236d101",
+      "userId": "system",
+      "text": "تم إنشاء الصفقة. المشتري يحول 7050 SYP خلال 15 دقيقة. يمكنكما الدردشة هنا داخل المنصة.",
+      "createdAt": 1793490236963
+    },
+    {
+      "id": "msg_1466d38009e32c4c",
+      "orderId": "ord_cd02c3ac6236d101",
+      "userId": "system",
+      "text": "أكد المشتري أنه دفع وأرفق إثبات التحويل. يرجى من البائع التحقق ثم الإفراج عن العملة.",
+      "createdAt": 1793490278597
+    },
+    {
+      "id": "msg_7a0276653e42f1de",
+      "orderId": "ord_cd02c3ac6236d101",
+      "userId": "system",
+      "text": "تم الإفراج عن 50 USDT إلى محفظة المشتري. الصفقة مكتملة.",
+      "createdAt": 1793490327547
+    }
+  ],
+  "notifications": [
+    {
+      "id": "n_a266aa03e54c3e77",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 10 BTC من محفظتك دون معاملة. · 10",
+      "extra": {
+        "href": "/admin"
+      },
+      "href": "/admin",
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793829265617
+    },
+    {
+      "id": "n_286609259e57954e",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 10 ETH من محفظتك دون معاملة.",
+      "extra": {
+        "href": "/admin"
+      },
+      "href": "/admin",
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793829259283
+    },
+    {
+      "id": "n_d8bbd1a64d0628b1",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 10 BNB من محفظتك دون معاملة. · 10",
+      "extra": {
+        "href": "/admin"
+      },
+      "href": "/admin",
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793829248843
+    },
+    {
+      "id": "n_5672aed8e91b1b76",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 10 USDC من محفظتك دون معاملة.",
+      "extra": {
+        "href": "/admin"
+      },
+      "href": "/admin",
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793829239985
+    },
+    {
+      "id": "n_8fb7666faa1e51f7",
+      "userId": "u_admin",
+      "title": "تم تنفيذ السحب",
+      "body": "أُرسل 10 USDT إلى 0x5918240effe9aac3667740a7b5e82c2498fd34d8",
+      "extra": {
+        "href": "/admin"
+      },
+      "href": "/admin",
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793829119174
+    },
+    {
+      "id": "n_e615707147129f74",
+      "userId": "u_admin",
+      "title": "طلب سحب جديد",
+      "body": "ameralzman00 يطلب سحب 10 USDT",
+      "extra": {
+        "withdrawalId": "wd_c082e855003f320e",
+        "href": "/admin?tab=withdrawals"
+      },
+      "href": "/admin?tab=withdrawals",
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793829066265
+    },
+    {
+      "id": "n_d64177e9d3e891f0",
+      "userId": "u_admin",
+      "title": "طلب سحب",
+      "body": "بانتظار مراجعة الإدارة: 10 USDT (رسوم 0.225)",
+      "extra": {
+        "href": "/admin"
+      },
+      "href": "/admin",
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793829066264
+    },
+    {
+      "id": "n_7286369cc6f11fef",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 1000 USDT من محفظتك دون معاملة.",
+      "extra": {
+        "href": "/admin"
+      },
+      "href": "/admin",
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793829042170
+    },
+    {
+      "id": "n_9f3befae9434adb8",
+      "userId": "u_92640515d595602e",
+      "title": "حساب تلغرام",
+      "body": "تم إنشاء حسابك تلقائياً من بوت USDT شام.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793652152774,
+      "href": ""
+    },
+    {
+      "id": "n_227fac88a6da968d",
+      "userId": "u_441009a53d0d0ddd",
+      "title": "مرحباً بك في USDT شام",
+      "body": "تم إنشاء حسابك. أكمل توثيق KYC ثم أودع عبر BEP20 لبدء التداول.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793651968734,
+      "href": ""
+    },
+    {
+      "id": "n_2e6045af80ee6e31",
+      "userId": "u_admin",
+      "title": "تم نشر الإعلان",
+      "body": "إعلانك رقم #100005 ظاهر الآن في السوق.",
+      "extra": {
+        "adId": "ad_64c862366cf97fb9"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793650876353,
+      "href": ""
+    },
+    {
+      "id": "n_b109ec84bd40a6f9",
+      "userId": "u_8612cda06ac7436e",
+      "title": "تم تعديل الإعلان",
+      "body": "حُدّث الإعلان #100004.",
+      "extra": {
+        "adId": "ad_2d27b3ab08962b23"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793650822767,
+      "href": ""
+    },
+    {
+      "id": "n_28a19c820dbed503",
+      "userId": "u_8612cda06ac7436e",
+      "title": "تم نشر الإعلان",
+      "body": "إعلانك رقم #100004 ظاهر الآن في السوق.",
+      "extra": {
+        "adId": "ad_2d27b3ab08962b23"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793650776301,
+      "href": ""
+    },
+    {
+      "id": "n_5668f7c2db2a7f00",
+      "userId": "u_8612cda06ac7436e",
+      "title": "تم اعتمادك تاجراً",
+      "body": "اهلا وسهلا",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793650428019,
+      "href": ""
+    },
+    {
+      "id": "n_756f454ae0778127",
+      "userId": "u_8612cda06ac7436e",
+      "title": "تم إرسال طلب التاجر",
+      "body": "طلبك قيد مراجعة المدير.",
+      "extra": {},
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793650344210,
+      "href": ""
+    },
+    {
+      "id": "n_d8c8dc896964f661",
+      "userId": "u_admin",
+      "title": "طلب اعتماد تاجر",
+      "body": "nedale طلب اعتماد حساب كتاجر",
+      "extra": {},
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793650344210,
+      "href": ""
+    },
+    {
+      "id": "n_2237eabb0b9ce28c",
+      "userId": "u_8612cda06ac7436e",
+      "title": "تم قبول KYC",
+      "body": "",
+      "extra": {},
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793649866778,
+      "href": ""
+    },
+    {
+      "id": "n_e18470ae41553ec7",
+      "userId": "u_8612cda06ac7436e",
+      "title": "تم قبول KYC",
+      "body": "",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793649865004,
+      "href": ""
+    },
+    {
+      "id": "n_6cf4f52ed81c1b67",
+      "userId": "u_8612cda06ac7436e",
+      "title": "تم إرسال KYC",
+      "body": "طلب التوثيق قيد المراجعة. لن يُقبل إلا بعد اطلاع المدير على الصور.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793649806099,
+      "href": ""
+    },
+    {
+      "id": "n_2964d0d98e88c12a",
+      "userId": "u_admin",
+      "title": "طلب KYC",
+      "body": "nedale أرسل ملف توثيق أساسي للمراجعة",
+      "extra": {},
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793649806099,
+      "href": ""
+    },
+    {
+      "id": "n_0407de21d9b89bb3",
+      "userId": "u_e9fe9309591d22c7",
+      "title": "حساب تلغرام",
+      "body": "تم إنشاء حسابك تلقائياً من بوت USDT شام.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793649337708,
+      "href": ""
+    },
+    {
+      "id": "n_6753845a8d9789b0",
+      "userId": "u_8612cda06ac7436e",
+      "title": "إعادة تعيين كلمة المرور",
+      "body": "أعاد المدير تعيين كلمة المرور بعد التحقق من هويتك. اطلب الكلمة المؤقتة من الدعم عبر تلغرام ثم غيّرها فوراً بعد الدخول.",
+      "extra": {
+        "skipTelegramBody": true
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793647412389,
+      "href": ""
+    },
+    {
+      "id": "n_6dbea3637850d55e",
+      "userId": "u_8612cda06ac7436e",
+      "title": "إعادة تعيين كلمة المرور",
+      "body": "أعاد المدير تعيين كلمة المرور بعد التحقق من هويتك. اطلب الكلمة المؤقتة من الدعم عبر تلغرام ثم غيّرها فوراً بعد الدخول.",
+      "extra": {
+        "skipTelegramBody": true
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793647311084,
+      "href": ""
+    },
+    {
+      "id": "n_8319009bca110886",
+      "userId": "u_8612cda06ac7436e",
+      "title": "مرحباً بك في USDT شام",
+      "body": "تم إنشاء حسابك. أكمل توثيق KYC ثم أودع عبر BEP20 لبدء التداول.",
+      "extra": {},
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793647152643,
+      "href": ""
+    },
+    {
+      "id": "n_db4054c20e317648",
+      "userId": "u_admin",
+      "title": "تم نشر الإعلان",
+      "body": "إعلانك رقم #100003 ظاهر الآن في السوق.",
+      "extra": {
+        "adId": "ad_fae311acbb164b4c"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793638954265,
+      "href": ""
+    },
+    {
+      "id": "n_fa41632ae71b95a5",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 50 ETH من محفظتك دون معاملة.",
+      "extra": {},
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793638044567,
+      "href": ""
+    },
+    {
+      "id": "n_646cb109d0ed7e52",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 100 BNB من محفظتك دون معاملة.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793638028567,
+      "href": ""
+    },
+    {
+      "id": "n_be669184aaf33f77",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 1000 USDC من محفظتك دون معاملة.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793638012108,
+      "href": ""
+    },
+    {
+      "id": "n_6deaea5c5843e277",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 1 BTC من محفظتك دون معاملة.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793638001763,
+      "href": ""
+    },
+    {
+      "id": "n_9029f626d1fac35a",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 100000 USDT من محفظتك دون معاملة. · منحة تجريبيه",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793637936573,
+      "href": ""
+    },
+    {
+      "id": "n_5dc883712b74ce8c",
+      "userId": "u_a4e8b654ca96b89a",
+      "title": "حساب تلغرام",
+      "body": "تم إنشاء حسابك تلقائياً من بوت USDT شام.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793546597048,
+      "href": ""
+    },
+    {
+      "id": "n_4635d1a7c0631361",
+      "userId": "u_admin",
+      "title": "خصم إداري",
+      "body": "خُصم 50 USDT لحساب investigator109 (69123522).",
+      "extra": {},
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793490438892,
+      "href": ""
+    },
+    {
+      "id": "n_98d3d41ebd5dd203",
+      "userId": "u_125fc58be585e496",
+      "title": "خصم إداري",
+      "body": "خُصم 50 USDT إلى محفظة investigator109 دون معاملة.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793490438892,
+      "href": ""
+    },
+    {
+      "id": "n_d9c4165986ad3baf",
+      "userId": "u_admin",
+      "title": "صفقة مكتملة",
+      "body": "أتممت بيع 50 USDT",
+      "extra": {
+        "orderId": "ord_cd02c3ac6236d101"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793490327547,
+      "href": ""
+    },
+    {
+      "id": "n_2110fff1abf2572b",
+      "userId": "u_125fc58be585e496",
+      "title": "تم الإفراج",
+      "body": "استلمت 50 USDT",
+      "extra": {
+        "orderId": "ord_cd02c3ac6236d101"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793490327547,
+      "href": ""
+    },
+    {
+      "id": "n_0e4ce2d4e05d2ef9",
+      "userId": "u_admin",
+      "title": "تم الدفع",
+      "body": "المشتري محمد احمد اسعد أكد دفع صفقة ord_cd02c3ac6236d101 مع إثبات. طابق الاسم مع إيصال شام كاش قبل الإفراج.",
+      "extra": {
+        "orderId": "ord_cd02c3ac6236d101"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793490278598,
+      "href": ""
+    },
+    {
+      "id": "n_fdbced048792f43b",
+      "userId": "u_admin",
+      "title": "صفقة جديدة",
+      "body": "بيع 50 USDT مقابل 7050 SYP · المشتري: محمد احمد اسعد",
+      "extra": {
+        "orderId": "ord_cd02c3ac6236d101"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793490236963,
+      "href": ""
+    },
+    {
+      "id": "n_1b171f391735fc4d",
+      "userId": "u_125fc58be585e496",
+      "title": "صفقة جديدة",
+      "body": "اشتريت 50 USDT مقابل 7050 SYP",
+      "extra": {
+        "orderId": "ord_cd02c3ac6236d101"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793490236963,
+      "href": ""
+    },
+    {
+      "id": "n_198113bab7e29b59",
+      "userId": "u_admin",
+      "title": "تم نشر الإعلان",
+      "body": "إعلانك رقم #100002 ظاهر الآن في السوق.",
+      "extra": {
+        "adId": "ad_00bbe5faf5daec26"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793490116684,
+      "href": ""
+    },
+    {
+      "id": "n_f54f9a7b1ff8bdb2",
+      "userId": "u_admin",
+      "title": "حُذف الإعلان",
+      "body": "أُغلق الإعلان #100001 وأُعيد الرصيد المجمّد إن وُجد.",
+      "extra": {
+        "adId": "ad_e2aaf66624a1dacb"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793488891929,
+      "href": ""
+    },
+    {
+      "id": "n_e2c102d15ae8c086",
+      "userId": "u_admin",
+      "title": "نزاع جديد",
+      "body": "ameralzman00 فتح نزاعاً على صفقة 036df549: سبب آخر",
+      "extra": {
+        "orderId": "ord_205d8bb5036df549"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793488628515,
+      "href": ""
+    },
+    {
+      "id": "n_0a2544aedbb20c0a",
+      "userId": "u_125fc58be585e496",
+      "title": "نزاع على صفقة",
+      "body": "فُتح نزاع: سبب آخر",
+      "extra": {
+        "orderId": "ord_205d8bb5036df549"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793488628515,
+      "href": ""
+    },
+    {
+      "id": "n_4f0522d9ccb92861",
+      "userId": "u_125fc58be585e496",
+      "title": "رسالة جديدة",
+      "body": "هذاالوصل مزور",
+      "extra": {
+        "orderId": "ord_205d8bb5036df549"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793488607570,
+      "href": ""
+    },
+    {
+      "id": "n_bcaef9b32ff093df",
+      "userId": "u_admin",
+      "title": "رسالة جديدة",
+      "body": "دفعتلك حررلي",
+      "extra": {
+        "orderId": "ord_205d8bb5036df549"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793488566596,
+      "href": ""
+    },
+    {
+      "id": "n_0a42040f56b03975",
+      "userId": "u_admin",
+      "title": "رسالة جديدة",
+      "body": "دفعتلك حررلي",
+      "extra": {
+        "orderId": "ord_205d8bb5036df549"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793488565230,
+      "href": ""
+    },
+    {
+      "id": "n_0d6c07b6e141b534",
+      "userId": "u_admin",
+      "title": "رسالة جديدة",
+      "body": "الو",
+      "extra": {
+        "orderId": "ord_205d8bb5036df549"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793488555938,
+      "href": ""
+    },
+    {
+      "id": "n_27376293f437c095",
+      "userId": "u_admin",
+      "title": "تم الدفع",
+      "body": "المشتري محمد احمد اسعد أكد دفع صفقة ord_205d8bb5036df549 مع إثبات. طابق الاسم مع إيصال شام كاش قبل الإفراج.",
+      "extra": {
+        "orderId": "ord_205d8bb5036df549"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793488395926,
+      "href": ""
+    },
+    {
+      "id": "n_416ab6ceac4df565",
+      "userId": "u_admin",
+      "title": "صفقة جديدة",
+      "body": "بيع 50 USDT مقابل 6750 SYP · المشتري: محمد احمد اسعد",
+      "extra": {
+        "orderId": "ord_205d8bb5036df549"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793488300031,
+      "href": ""
+    },
+    {
+      "id": "n_4c17d409f8ebd8d3",
+      "userId": "u_125fc58be585e496",
+      "title": "صفقة جديدة",
+      "body": "اشتريت 50 USDT مقابل 6750 SYP",
+      "extra": {
+        "orderId": "ord_205d8bb5036df549"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793488300031,
+      "href": ""
+    },
+    {
+      "id": "n_9908f2f0dc396587",
+      "userId": "u_admin",
+      "title": "تم نشر الإعلان",
+      "body": "إعلانك رقم #100001 ظاهر الآن في السوق.",
+      "extra": {
+        "adId": "ad_e2aaf66624a1dacb"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793488272914,
+      "href": ""
+    },
+    {
+      "id": "n_05a9cbfdd27fb4ec",
+      "userId": "u_admin",
+      "title": "ترصيد إداري",
+      "body": "أُضيف 50 USDT من محفظتك دون معاملة.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793488085228,
+      "href": ""
+    },
+    {
+      "id": "n_b5a2b10aba4bc839",
+      "userId": "u_125fc58be585e496",
+      "title": "تم قبول KYC",
+      "body": "تم القبول ",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793487834409,
+      "href": ""
+    },
+    {
+      "id": "n_8bf8f59b43c2590c",
+      "userId": "u_125fc58be585e496",
+      "title": "تم إرسال KYC",
+      "body": "طلب التوثيق قيد المراجعة. لن يُقبل إلا بعد اطلاع المدير على الصور.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793487597085,
+      "href": ""
+    },
+    {
+      "id": "n_92c784e5efa1bcef",
+      "userId": "u_admin",
+      "title": "طلب KYC",
+      "body": "investigator109 أرسل ملف توثيق أساسي للمراجعة",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793487597085,
+      "href": ""
+    },
+    {
+      "id": "n_e71d6264d9f0c872",
+      "userId": "u_ad6dd89175e36143",
+      "title": "مرحباً بك في USDT شام",
+      "body": "تم إنشاء حسابك. أكمل توثيق KYC ثم أودع عبر BEP20 لبدء التداول.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793487086806,
+      "href": ""
+    },
+    {
+      "id": "n_957e05c1200c4200",
+      "userId": "u_125fc58be585e496",
+      "title": "حساب تلغرام",
+      "body": "تم إنشاء حسابك تلقائياً من بوت USDT شام.",
+      "extra": {},
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793487006545,
+      "href": ""
+    },
+    {
+      "id": "n_efd23337d1ad01de",
+      "userId": "u_admin",
+      "title": "رسالة دعم جديدة",
+      "body": "abo3dai: اريد",
+      "extra": {
+        "supportTicketId": "sup_7f67c9f97ea15cf5"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793651479488,
+      "href": ""
+    },
+    {
+      "id": "n_de88c1bd5ec45c01",
+      "userId": "u_e9fe9309591d22c7",
+      "title": "رد من الدعم",
+      "body": "ماذا تريد",
+      "extra": {
+        "supportTicketId": "sup_7f67c9f97ea15cf5"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793651428905,
+      "href": ""
+    },
+    {
+      "id": "n_49810175f4518733",
+      "userId": "u_admin",
+      "title": "رسالة دعم جديدة",
+      "body": "abo3dai: اريد رمز التحرير",
+      "extra": {
+        "supportTicketId": "sup_7f67c9f97ea15cf5"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793651292263,
+      "href": ""
+    },
+    {
+      "id": "n_9c1971dccb1e1575",
+      "userId": "u_8612cda06ac7436e",
+      "title": "رد من الدعم",
+      "body": "اهلا وسهلا نورت",
+      "extra": {
+        "supportTicketId": "sup_9dfa1ba08d4b5b34"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793650090510,
+      "href": ""
+    },
+    {
+      "id": "n_b9329fb8ece2236d",
+      "userId": "u_admin",
+      "title": "رسالة دعم جديدة",
+      "body": "nedale: شكرا عالتوثيق",
+      "extra": {
+        "supportTicketId": "sup_9dfa1ba08d4b5b34"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793650073985,
+      "href": ""
+    },
+    {
+      "id": "n_7e33f5b529e279b1",
+      "userId": "u_8612cda06ac7436e",
+      "title": "رد من الدعم",
+      "body": "تم توثيقك",
+      "extra": {
+        "supportTicketId": "sup_9dfa1ba08d4b5b34"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793650068570,
+      "href": ""
+    },
+    {
+      "id": "n_7d70b6de9a53d710",
+      "userId": "u_8612cda06ac7436e",
+      "title": "رد من الدعم",
+      "body": "عليكم السلام",
+      "extra": {
+        "supportTicketId": "sup_9dfa1ba08d4b5b34"
+      },
+      "read": true,
+      "telegramPushed": true,
+      "createdAt": 1793650060744,
+      "href": ""
+    },
+    {
+      "id": "n_40f4f4ebb9480093",
+      "userId": "u_admin",
+      "title": "رسالة دعم جديدة",
+      "body": "nedale: أرغب بالتواصل مع الدعم البشري.",
+      "extra": {
+        "supportTicketId": "sup_9dfa1ba08d4b5b34"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793650053934,
+      "href": ""
+    },
+    {
+      "id": "n_5ff7185a2402179f",
+      "userId": "u_admin",
+      "title": "رسالة دعم جديدة",
+      "body": "nedale: شو منشان التوثيق",
+      "extra": {
+        "supportTicketId": "sup_9dfa1ba08d4b5b34"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793649990967,
+      "href": ""
+    },
+    {
+      "id": "n_dc4632af76b3bc97",
+      "userId": "u_admin",
+      "title": "رسالة دعم جديدة",
+      "body": "nedale: السلام عليكم",
+      "extra": {
+        "supportTicketId": "sup_9dfa1ba08d4b5b34"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793649965396,
+      "href": ""
+    },
+    {
+      "id": "n_0a8f4af40ccc0b1e",
+      "userId": "u_admin",
+      "title": "رسالة دعم جديدة",
+      "body": "nedale: رمز التحرير",
+      "extra": {
+        "supportTicketId": "sup_9dfa1ba08d4b5b34"
+      },
+      "read": false,
+      "telegramPushed": true,
+      "createdAt": 1793649955823,
+      "href": ""
+    }
+  ],
+  "sessions": [
+    {
+      "token": "46b6d9b2dee95b77d1a62426b069dc5897ef4c3cf1f8c638",
+      "userId": "u_admin",
+      "createdAt": 1792453361974,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "5e7302caab8f0b3487e6524a8562c4f0db2a1183e36e790e",
+      "userId": "u_admin",
+      "createdAt": 1792453362300,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "2cb290d184c16afda95b0e19c6bf990dd046937071631e58",
+      "userId": "u_admin",
+      "createdAt": 1792453364802,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d9fafd0faef94a098117bb8bd2a70ac342b60f0d28d2aa80",
+      "userId": "u_admin",
+      "createdAt": 1792453364973,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "19e77a2749ad8df6f582cd744390dfa1be68c463f5bea6a3",
+      "userId": "u_admin",
+      "createdAt": 1792453547613,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "2d2bad216b44c9e5c47906823cff6859454f9feb6af7226b",
+      "userId": "u_admin",
+      "createdAt": 1792453547991,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ba82bcef0bb88e160f19a19d7abc765cc02419340a8f6542",
+      "userId": "u_admin",
+      "createdAt": 1792453552484,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d953e6247a0b492ca035d68dccfd6e2feefa6f01720022f5",
+      "userId": "u_admin",
+      "createdAt": 1792453552593,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ff4dc16c7c08e9657bb356ea3bab7a233d3611beca2a5205",
+      "userId": "u_admin",
+      "createdAt": 1792453604477,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "0739634abfedd0ef5d7d8fdae4d7e207de38902858872c57",
+      "userId": "u_admin",
+      "createdAt": 1792453608784,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "458ca96a933a910a0fc69cf5df70691b77723892bff92c8c",
+      "userId": "u_admin",
+      "createdAt": 1792453608889,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4f6a69e2f02f13682e17e030f7deea406babde0f7d8caea2",
+      "userId": "u_admin",
+      "createdAt": 1792453844476,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "1d6341aa8d49ebf5fef787227f068d399e6b69fd61a2bf5b",
+      "userId": "u_admin",
+      "createdAt": 1792453844688,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "bfdd3936981b05cba1b706d890ceb7a4dec8e1699fd6c079",
+      "userId": "u_admin",
+      "createdAt": 1792454206283,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f7bb4653768d5fce17dbea25d57d33bdc978ac7d68aea4ea",
+      "userId": "u_admin",
+      "createdAt": 1792454206403,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "90e4ebb48cffe587e450c501640f278b614a08a57aa69680",
+      "userId": "u_admin",
+      "createdAt": 1792454245581,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a8915b942af632b1849a85be0ac2a362e41c9b29863a85ea",
+      "userId": "u_admin",
+      "createdAt": 1792454245689,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "7816a52dc6e1ee1084a336e3c79e0f21eaade599db65baa8",
+      "userId": "u_admin",
+      "createdAt": 1792454327893,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d0646544254ad4ff922c7dd379a893b40d3e51e37063adca",
+      "userId": "u_admin",
+      "createdAt": 1792454328010,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "134e01f702c25c4863339412a9fa371765112753ccf247de",
+      "userId": "u_admin",
+      "createdAt": 1792454434611,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "dfe45e2fb3a4748d418e83e7d9e310609fa31036ed7bbbc2",
+      "userId": "u_admin",
+      "createdAt": 1792454434888,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f68bb54b47b5cc1181c6c915c8539aa4876ac5744c58f93c",
+      "userId": "u_admin",
+      "createdAt": 1792454663182,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ae7fbd8d9d7e67ef20a507925d9b3f7e28ab44ea0dc82fdf",
+      "userId": "u_admin",
+      "createdAt": 1792454663287,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "1ffd9c616ce5651877e5756cf26ed774f6f9ce96e1b0466c",
+      "userId": "u_admin",
+      "createdAt": 1792455109173,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "bf3455705325f587eaae8aed74e631ff3aa6579b75b715a4",
+      "userId": "u_admin",
+      "createdAt": 1792455109394,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a31a7d1fd7114fa2d6353798722c8e354999f89f20a8db72",
+      "userId": "u_admin",
+      "createdAt": 1792455237080,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "c983cd462a13af79f76b9a0fa4134a7844b73d985cf443a9",
+      "userId": "u_admin",
+      "createdAt": 1792455237190,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "05516d8c225289a1fb117b2b1b0c621d65d1e92a594ab8c2",
+      "userId": "u_admin",
+      "createdAt": 1792455357181,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "66df339faa87ccc1b528e3a35237bf1eb58d2f2ea6a4e4d9",
+      "userId": "u_admin",
+      "createdAt": 1792455357252,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "38a22ff3b8c76753a9867dc3f36ab42a55c591006b743080",
+      "userId": "u_admin",
+      "createdAt": 1792455443251,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "335a40f3c943d9e5545c425645a61adb9f9955b69d445911",
+      "userId": "u_admin",
+      "createdAt": 1792455443367,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "05e719fe06598504f74d13d5ee7ef5ebaa5518ac28203281",
+      "userId": "u_admin",
+      "createdAt": 1792456269463,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f140a785846ce406fcdb065d1e7f39c487565db9a552bf9d",
+      "userId": "u_admin",
+      "createdAt": 1792456269581,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "29396ba288e1ce44c5a68adedc7b8223dc3c088986004956",
+      "userId": "u_admin",
+      "createdAt": 1792456272859,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a27fabcdb122a80dde3c5cf92a8183ada6b4508f30407e1c",
+      "userId": "u_admin",
+      "createdAt": 1792456273077,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "caa5f46c0047274d1d3b6166289d59840584c5855c544a02",
+      "userId": "u_admin",
+      "createdAt": 1792456281047,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "35aa8234d6794ba5f0bf6f355503262ef6e378e6ae5e8223",
+      "userId": "u_admin",
+      "createdAt": 1792456281374,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "1afbe1dc6c2db4a812a55835514ecb4524fa7ddbfb4b9da2",
+      "userId": "u_admin",
+      "createdAt": 1792457226925,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d5cbc17e6ab1d56418257080ed30f7317a552bed2373ed45",
+      "userId": "u_admin",
+      "createdAt": 1792457227014,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "8fab9eb6c4dbb6aaf87ecd949dbbf32531ffdccac544afed",
+      "userId": "u_admin",
+      "createdAt": 1792457556715,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "04a6608d92590d262512ebbcb9b458d7571f41b446c39b94",
+      "userId": "u_admin",
+      "createdAt": 1792457556832,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "395f99378c89f90eb1ae2482805a95d01db4d912b44d47a2",
+      "userId": "u_admin",
+      "createdAt": 1792457594937,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "c00f64dc997873ee21e1bf7050100723bfbdb1305dfd3ee9",
+      "userId": "u_admin",
+      "createdAt": 1792457595043,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "671a887cb4210196bc27c705c03f8be0b3f1477ac795bb51",
+      "userId": "u_admin",
+      "createdAt": 1792457708727,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "97e430c73139d915fbf85af469402d4df52285060ac1618d",
+      "userId": "u_admin",
+      "createdAt": 1792457708836,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "9b60c4c331c96b9767b5128a7dedaf631e76fff6b18544ee",
+      "userId": "u_admin",
+      "createdAt": 1792458131055,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "aaa0c4439056f9745bccdd7f9cdcb8e76c4f7d9da837b481",
+      "userId": "u_admin",
+      "createdAt": 1792458131319,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "8e934ad96049c4bd489391abd939b70072aba6ce46004c88",
+      "userId": "u_admin",
+      "createdAt": 1792458264257,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "0ecd7ded347120c9f7da0d23f7ab1e01ee8d2642a937ed94",
+      "userId": "u_admin",
+      "createdAt": 1792458264366,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "2d9a1a13519f2944091904254354399e613618358c4167fb",
+      "userId": "u_admin",
+      "createdAt": 1792458574520,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "7f7199d86cac9b2728e5d05def94a0fbba7d8673416600a9",
+      "userId": "u_admin",
+      "createdAt": 1792458574631,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "78acbb2f8386fc29b9addbc980408c833f557ab1c47a60e4",
+      "userId": "u_admin",
+      "createdAt": 1792458701202,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "547fb79e04cf7e1fc2d24d13f42c486060b7df6063c02605",
+      "userId": "u_admin",
+      "createdAt": 1792458701325,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4174d162fc66047c803dc40e58a668a27c23a0cfccb9264a",
+      "userId": "u_admin",
+      "createdAt": 1792459397139,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ab0bb42d2f5b6e237ef6307a8d080c05b3524bd07c225216",
+      "userId": "u_admin",
+      "createdAt": 1792459397328,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "6013853ee07ccac4b74baa2447d761ef3a3ab719e872e7f2",
+      "userId": "u_admin",
+      "createdAt": 1792459806538,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a9e6507886998770f50488e2a11607fd0bd02b97f616b837",
+      "userId": "u_admin",
+      "createdAt": 1792459806666,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "afd344cef9cd504d82e2e57659267f259e2fc7e6ee8ad838",
+      "userId": "u_admin",
+      "createdAt": 1792460085036,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f43bd52f893493f22728d9a1f8e08b3e13a95fbefd574569",
+      "userId": "u_admin",
+      "createdAt": 1792460085141,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "7ad0fdb957e194a43035efee3e50b2184568d2b5bc53cabb",
+      "userId": "u_admin",
+      "createdAt": 1792460355745,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "36128b7f5030efcb963274186c34af92a8feb70d681550e8",
+      "userId": "u_admin",
+      "createdAt": 1792460355959,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "27b436475da8349a2601974f0cd128f49245fa74f7ed200f",
+      "userId": "u_admin",
+      "createdAt": 1792460389561,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "da8228b334c85a0e8786174c1cbd78f256af90b1df49f5bb",
+      "userId": "u_admin",
+      "createdAt": 1792460389925,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "68c10f128836dfad854f9ad48c5c131000f28ae68185d9f6",
+      "userId": "u_admin",
+      "createdAt": 1792460537372,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "32bd542059802c27924f4e10e86d9f00ede4bd7a144a847e",
+      "userId": "u_admin",
+      "createdAt": 1792460537763,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "170ea73c2f7c64e551e0c67cf05f2458d7e3112b151e33a3",
+      "userId": "u_admin",
+      "createdAt": 1792460803258,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4383b8d77f9cf56c00164b62b6ee7327c606041be7a3598e",
+      "userId": "u_admin",
+      "createdAt": 1792460803375,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a2646979912ab7513224640f1aed6885cb6177b935f8ee12",
+      "userId": "u_admin",
+      "createdAt": 1792460963079,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "e0474fb15c9ae960c5ff73caabb90da1048a47e0a82f79c7",
+      "userId": "u_admin",
+      "createdAt": 1792460963257,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "8c8b6132bd8f2db96cac7cd9bc181f4ca20b77ec360e196b",
+      "userId": "u_admin",
+      "createdAt": 1792461146074,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "b9a5fdcc0ce3e27357efbf6ac0b54907ad554f4dd4933824",
+      "userId": "u_admin",
+      "createdAt": 1792461146355,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "689899b3e60c3515eccf9d4a327e20d007fea3d717fcac78",
+      "userId": "u_admin",
+      "createdAt": 1792461221660,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "1eb8f11d15af7e4b3b75d8f499c7fa79cbaf8e77751c3ac4",
+      "userId": "u_admin",
+      "createdAt": 1792461221969,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "87518c0466726b85a5e5ac869a2cea323ddc2acbdcf5d64e",
+      "userId": "u_admin",
+      "createdAt": 1792461314559,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "32bab6686055a0645bc51335972d769ad4e8217bed94bce7",
+      "userId": "u_admin",
+      "createdAt": 1792461314780,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "1bba1438e55bc4680c8718e2a33745394bd8c0b4a1898d8e",
+      "userId": "u_admin",
+      "createdAt": 1792461362170,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "e9e7a55a7ebea2c172bfb337e48a9408681431bd614f6d0a",
+      "userId": "u_admin",
+      "createdAt": 1792461362512,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "b4f550facef993004135e849d56829e10803f3f0385737c5",
+      "userId": "u_admin",
+      "createdAt": 1792461440865,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ad61561efc9b6517041f477151c662d8848b78034f5c1acb",
+      "userId": "u_admin",
+      "createdAt": 1792461441163,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d6ffa4dbf225ebd4e122743dc28de5c6d7ae3bb3ce6a6e10",
+      "userId": "u_admin",
+      "createdAt": 1792461515330,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "8e5fd66ed08c96aab10fb63bfa610227d619f110b6b1218f",
+      "userId": "u_admin",
+      "createdAt": 1792461515457,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "8e0b83129708d6ba6290bf6a43a9e01bbbf46fa6da12ddc4",
+      "userId": "u_admin",
+      "createdAt": 1792461703444,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "3b44f06308a145cb664f32d0e415c963455253ddab27a27c",
+      "userId": "u_admin",
+      "createdAt": 1792461703558,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "7b6899542d171a346333ac14d71a963c15b13c7aae703336",
+      "userId": "u_admin",
+      "createdAt": 1792461946255,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "5ccde3c915733dc94c02c55c890e1818a8c955c8ca5967b4",
+      "userId": "u_admin",
+      "createdAt": 1792461946426,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "e9f6e57075601ac267b12257cbeedfb78e0dcadd0118cd5c",
+      "userId": "u_admin",
+      "createdAt": 1792462006365,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d1a7a33b77be6866531cc92f389a92cb438da2be24916adb",
+      "userId": "u_admin",
+      "createdAt": 1792462006655,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "06b9ba9fc782c93a57de083a46169fad7a354914c32915d7",
+      "userId": "u_admin",
+      "createdAt": 1792462091345,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4adff905d8919860a673c9459859a6cf4e062a910241756f",
+      "userId": "u_admin",
+      "createdAt": 1792462091465,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "bad9f4c12e8207ce906b18d3fdddb785d5f896fb2e5d0963",
+      "userId": "u_admin",
+      "createdAt": 1792462230635,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4409f77a949086686493de7d434a35ba6b3a524a86d94812",
+      "userId": "u_admin",
+      "createdAt": 1792462230752,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "1694bac983d91526ec4a97d2ee90700541e2fad910a1ad63",
+      "userId": "u_admin",
+      "createdAt": 1792462326267,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d63c07f56009999bf1cea6818718dbcbb1b76d9cd1b30d0b",
+      "userId": "u_admin",
+      "createdAt": 1792462326444,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "87f547975bb33fa73a8db013acc22245239b6808c51cf2c6",
+      "userId": "u_admin",
+      "createdAt": 1792462834934,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a330ff1e2d554e3cf11b1b3db40f82364ad66dfa1734a9b9",
+      "userId": "u_admin",
+      "createdAt": 1792462835046,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "2518c55a9fc67190c9b8cda05376053512d633594d77fd10",
+      "userId": "u_admin",
+      "createdAt": 1792463112659,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "e220b578801a77dc274a63dae0d3641ec969c7b9550299e6",
+      "userId": "u_admin",
+      "createdAt": 1792463112766,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4f859718f19a145e6093dad5f08becfbf81f2717615842f0",
+      "userId": "u_admin",
+      "createdAt": 1792463671738,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a44080eeef6894fdef7606a133ab938872d0611a3aa7dab6",
+      "userId": "u_admin",
+      "createdAt": 1792463671954,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "2029c1a3600e04c204c643dfce7e2f42b63510cc5eeecb81",
+      "userId": "u_admin",
+      "createdAt": 1792464650850,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "65ff54b46795db7062198f362d96f5463e6ef7c33b4e11e5",
+      "userId": "u_admin",
+      "createdAt": 1792464651419,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "67eaf3e6c9c3218fbb70c7ca65a3969ec7d796914b828ddd",
+      "userId": "u_admin",
+      "createdAt": 1792464808568,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "e631dd90f78a14768075e42428dc0e191f723004133fd5fc",
+      "userId": "u_admin",
+      "createdAt": 1792464808947,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4a555e082637d6a55c7c1089f50249ba014ba031e56905f8",
+      "userId": "u_admin",
+      "createdAt": 1792464910133,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "e70f9d3fef4356dd9403b4205d4f3f90d38adeffbf838faf",
+      "userId": "u_admin",
+      "createdAt": 1792464910347,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "73276589671906723e83c5d7b00a1a5ba80d821da126cab2",
+      "userId": "u_admin",
+      "createdAt": 1792465301950,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4496f95c27f91544926e45973bd8e43b54eca39a76996641",
+      "userId": "u_admin",
+      "createdAt": 1792465302058,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "913c915fbb6d6f61dddff3171d50deeceb9b66ad207b60fa",
+      "userId": "u_admin",
+      "createdAt": 1792465628037,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "5440c85193809016eaaab7a7f4de19d2d0950d91b4bc0edb",
+      "userId": "u_admin",
+      "createdAt": 1792465628427,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "6a93acb9540287b6df65790b003b4f9067880ceed45204b0",
+      "userId": "u_admin",
+      "createdAt": 1792465691444,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "77e07143dac212c2e62dfd21d69343862d2d4135e3b956cf",
+      "userId": "u_admin",
+      "createdAt": 1792465691504,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ded8541fe9ac23e19978a8750bd6f9f9dd5a3d0ac5e6ae51",
+      "userId": "u_admin",
+      "createdAt": 1792465732771,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f3206df5456c4d8a453c9a1b394fca84fe8599e9a4f1da56",
+      "userId": "u_admin",
+      "createdAt": 1792465732898,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "16702deaf8b8746ce45178afedcdaac6fa622e89f242d3c1",
+      "userId": "u_admin",
+      "createdAt": 1792466684181,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "29fefa57cc17ff3677a3707bca3eb77efcf2added66f702a",
+      "userId": "u_admin",
+      "createdAt": 1792466684242,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "460049ca627a5147a84fdeec3cee8bab8959082ccf0336be",
+      "userId": "u_admin",
+      "createdAt": 1792467004692,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f15a0499c0b26ba7bf19a3955caa87fa80453d4c2c6f09fd",
+      "userId": "u_admin",
+      "createdAt": 1792467004810,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "7a8df1bd485ffef307a257ed902fd84abcc77a3d012bd12c",
+      "userId": "u_admin",
+      "createdAt": 1792513084406,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f9f9318071b4d277e4988b76f8af214cc9af8bc96111e05a",
+      "userId": "u_admin",
+      "createdAt": 1792513506582,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "11a96255f3109989d4eac5b8832ba87c185f953cd3841cc8",
+      "userId": "u_admin",
+      "createdAt": 1792582054134,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "63628cbe4afa172f00f5830d75941280f6243b7268261eb9",
+      "userId": "u_admin",
+      "createdAt": 1792582054320,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "bb4344b84e0f6c7743cd5da41c65fafc4b3d267df478cfe8",
+      "userId": "u_admin",
+      "createdAt": 1792582358494,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "27b973e99152970b2404bddb4124044402aaf507d2f197a1",
+      "userId": "u_admin",
+      "createdAt": 1792582358686,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "364c23e850b5d293a02b012b95644b92ac40fc7861e11885",
+      "userId": "u_admin",
+      "createdAt": 1792582876714,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "301233074ae4ec83387dadbbc1f9f0274cfdf200d2d6d220",
+      "userId": "u_admin",
+      "createdAt": 1792582876856,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "2ed46bf617957ecb0bc9bd43ff90df7d06ffd2d2b1ce438e",
+      "userId": "u_admin",
+      "createdAt": 1792583160435,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "29ab59711280c8f8678d83171ff11f04da7843fec068a721",
+      "userId": "u_admin",
+      "createdAt": 1792583160498,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "922cd88ac636ee741c70d085858f9e532d1c7c6eaa811b1b",
+      "userId": "u_admin",
+      "createdAt": 1792600373495,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "0c4f45cc8d18d11e1257f6b2dca17b2a5e7516589116dd95",
+      "userId": "u_admin",
+      "createdAt": 1792600373796,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "92914fb05fe8a5a980d9fcf8cb88849d986fd66d37c5b482",
+      "userId": "u_admin",
+      "createdAt": 1792600455835,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ddce0121c2f4de7986d7133cf74201e920ae02c69e76f8dc",
+      "userId": "u_admin",
+      "createdAt": 1792600455899,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ea645e832518dd5ba3da3385aa56d55cca3f81a7522252b8",
+      "userId": "u_admin",
+      "createdAt": 1792600480991,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "38daa56a5ef730d8cb6f02f2d7d6f3f1d013b33143c21c8a",
+      "userId": "u_admin",
+      "createdAt": 1792600481056,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d48c504dbd9198a0e699479908cf1fbaa546c635c473a46f",
+      "userId": "u_admin",
+      "createdAt": 1792600526693,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "7dc66ec0b4cab85a2370b234332739abfa642d4f1420f6b4",
+      "userId": "u_admin",
+      "createdAt": 1792600526782,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "6296e54f075ee7e41ed58b7aa3711945ff9d1e91263c1554",
+      "userId": "u_admin",
+      "createdAt": 1792601263772,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "61f1354571ae70aac4fdef47f783a13cafdee467e02a3547",
+      "userId": "u_admin",
+      "createdAt": 1792601263850,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "c322ee5653a6c24ea6ad558e66dfa1e5d6931fb0fc016f5a",
+      "userId": "u_admin",
+      "createdAt": 1792601947761,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d25a113cb4af00fa363ddd88170b125f043a50d8b3d686ae",
+      "userId": "u_admin",
+      "createdAt": 1792601947835,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a54592d085b7d7cb484d6e744fc52497929b4a96ccac7799",
+      "userId": "u_admin",
+      "createdAt": 1792602195461,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "2c35dfb120f4e06ea51ce0a42bd7758b2761274f24678cdd",
+      "userId": "u_admin",
+      "createdAt": 1792602195526,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "87f6a3a851de6620b877c135ec91dca090b90a2e1ffb0eee",
+      "userId": "u_admin",
+      "createdAt": 1792602368620,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "28be20b41c8c4dbc4cd5471bd6f2c886e79e3d443dac2849",
+      "userId": "u_admin",
+      "createdAt": 1792602368785,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a3ea1ecf2a09227bb36b6ed1866db0caa913ccd1bce3f305",
+      "userId": "u_admin",
+      "createdAt": 1792603277272,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "654c4a1ab170985f539ec207becfdddb2a9f5a16fb44046b",
+      "userId": "u_admin",
+      "createdAt": 1792603277335,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "c3cf67333e7685965ae2f4fd25780989eaca356f64baf508",
+      "userId": "u_admin",
+      "createdAt": 1792603711897,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "3914e9d0a5120983b3336a46fa7abcc9612fc6b2f5d6a539",
+      "userId": "u_admin",
+      "createdAt": 1792603711969,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "392835f6ea4fbcda115dd1cd4b999127f988fe3123437823",
+      "userId": "u_admin",
+      "createdAt": 1792604209230,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "07b6388de65e9187edca386b5ba71db232e5abf069b27b89",
+      "userId": "u_admin",
+      "createdAt": 1792604209368,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ec37cb25c207856dcb8967af273ac10528bbe0c63c8f68ed",
+      "userId": "u_admin",
+      "createdAt": 1792604638811,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "873c1fd9b53e05485e2e70a7aa70b7a0b72de9cdee9e885e",
+      "userId": "u_admin",
+      "createdAt": 1792604639201,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "162e2caeed8a6447d7a4427b3ac1c92ba954a720498f406f",
+      "userId": "u_admin",
+      "createdAt": 1792627877415,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "45164f9e0542ee306baaf35505f5da493de6acdda2088f8f",
+      "userId": "u_admin",
+      "createdAt": 1792627877650,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "7e41ebd821e15213ff3e5cf8d51b6abce67105df7aaae1f0",
+      "userId": "u_admin",
+      "createdAt": 1792628870978,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "3ae13acac22a3ba9d1ca87a5fc92c11b79eb6b16e211deaf",
+      "userId": "u_admin",
+      "createdAt": 1792628871042,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "e9ad259549cc6fac9178cee2b9b559da74bb118854b9afc9",
+      "userId": "u_admin",
+      "createdAt": 1792676922390,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "40cf8b3fafc7163b8ffd43a46fb9f0f9284e3f339d602861",
+      "userId": "u_admin",
+      "createdAt": 1792676922643,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "84b3fce29a18c7ab55d27914ecbd6c28ebc5cb17933146c7",
+      "userId": "u_admin",
+      "createdAt": 1792712471833,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "efb9f048c5581fea2e3b26cff70a69ff68f3fb8fc0a8581e",
+      "userId": "u_admin",
+      "createdAt": 1792712471901,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "8de35705f176c4d07df735688d0c6fff1afce4093bd8cd76",
+      "userId": "u_admin",
+      "createdAt": 1792864503317,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "0c27746560e5fb0b760d53cfa2cbdc0a9175d42584673fcc",
+      "userId": "u_admin",
+      "createdAt": 1792864503737,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "cd2e3dbc9546655d6ae54034af873f18abc433793b4d1006",
+      "userId": "u_admin",
+      "createdAt": 1792864951060,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4d8164d06799366b3baae50ff919ac0a72211116031f6321",
+      "userId": "u_admin",
+      "createdAt": 1792864951123,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "c3ffa7936c98cc6e6ac2265c0069e023a3238f8fe8bdb32b",
+      "userId": "u_admin",
+      "createdAt": 1792865453860,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "af8fccdffffea2a3957daee5eb55a77e17b3390e2edd3250",
+      "userId": "u_admin",
+      "createdAt": 1792865453981,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "9409bc1a159c6110d06d668f505cabdc5e113b87ec4fbe0b",
+      "userId": "u_admin",
+      "createdAt": 1792865863796,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "46dceef02a3ef1b84f49c726059f3bea7fd523015ce185c6",
+      "userId": "u_admin",
+      "createdAt": 1792865863941,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "3149d072a166e0882c2a9944af0666fc29cb2bc8a3a9841c",
+      "userId": "u_admin",
+      "createdAt": 1792865881398,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ced41d41ed5bbdf93021f943d1e8d71c51e2b7a5da0c877d",
+      "userId": "u_admin",
+      "createdAt": 1792865881729,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "08ffd8651e65b8e485b9d9fd8441f4cba2ee222bbe5b1a40",
+      "userId": "u_admin",
+      "createdAt": 1792865901921,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "6c1529da2158d5c6026fd66c5da6a6722cf1af2a9eb3568f",
+      "userId": "u_admin",
+      "createdAt": 1792865902141,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "6abf244092eee23aa7d75e7cd557f1b4fd5c4ba5078a300d",
+      "userId": "u_admin",
+      "createdAt": 1792866135260,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "0ed1d095859208322034f3c70d4e5446d5d91d9db105481f",
+      "userId": "u_admin",
+      "createdAt": 1792866135658,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "1ad827dde7ef0e9be5d0644669f9e09ca970203dacdb764f",
+      "userId": "u_admin",
+      "createdAt": 1792866424766,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "9ea6c0292ec620eae53cf31c4a4b6d11adc6d1dbb50d8462",
+      "userId": "u_admin",
+      "createdAt": 1792866424840,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "53ea3f09adcf791f183def483495b7dd16c3083dcc8347fe",
+      "userId": "u_admin",
+      "createdAt": 1792866493487,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "16bc47308d64bf4f4bc3414924530bfc63d5071d1165d204",
+      "userId": "u_admin",
+      "createdAt": 1792866493605,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "9f51dcd8df0b2dd708d007bdf553cd13c4543baee2226652",
+      "userId": "u_admin",
+      "createdAt": 1792947852546,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "175df7c7627148b303ad03c6486a51d164e94a7aa883ac2b",
+      "userId": "u_admin",
+      "createdAt": 1792947852620,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "a04eefdebf235e91b7f6afced6f7190636eac44d47fbd8ea",
+      "userId": "u_admin",
+      "createdAt": 1792947873354,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d82325e39928dafa6d3a5f523103b1c20569a8c532b7092f",
+      "userId": "u_admin",
+      "createdAt": 1792947873431,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "947a97581e473222d9e9f9bfa2109776db7e0683deebd4c9",
+      "userId": "u_admin",
+      "createdAt": 1792947953531,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "b6bb1066e53393c6ea7c526fbe9b2b254550407e01b68cd3",
+      "userId": "u_admin",
+      "createdAt": 1792947953613,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "9f3aacca08d6a8ec03636bb0d76547437216a1ee89ac5570",
+      "userId": "u_admin",
+      "createdAt": 1792947972126,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d2c264a52f825cf4c900f147caba39e5d2e2d470f569a731",
+      "userId": "u_admin",
+      "createdAt": 1792947972193,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "bc5194fbde34737b2d2fd62af3f0cdaf448f167adc0abf5b",
+      "userId": "u_admin",
+      "createdAt": 1792948096078,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "b8f73f79b053f51e5a7ed77e183434ce65032c4fcf887d3d",
+      "userId": "u_admin",
+      "createdAt": 1792948115788,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d1229e12d54eef3f003710c3cb66a5bfd5d2c0e864d90cee",
+      "userId": "u_admin",
+      "createdAt": 1792948121627,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "5441692db9be8439d02e1346bc1af57a936ce1ea2f6d8ce3",
+      "userId": "u_admin",
+      "createdAt": 1792948130111,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f43f400aba805e995f294a7234480cfaa20188f20fd3675d",
+      "userId": "u_admin",
+      "createdAt": 1792948445213,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "bd8a05e4aedf49c3dfad9f36dd31e009c0211c9fa82acf25",
+      "userId": "u_admin",
+      "createdAt": 1792950938948,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "84367faa91c87a9ace19e2bba77490c6614452ad110f7445",
+      "userId": "u_admin",
+      "createdAt": 1793320124683,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "04fe45c886fcf78df90018d508fff1e6efd811de0d2a55f6",
+      "userId": "u_admin",
+      "createdAt": 1793388422443,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "29e7025c95f83095bf6ac82105bf9e5c9d805971c96bcae1",
+      "userId": "u_admin",
+      "createdAt": 1793487783725,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f977e10c936b30be4a2e02003d28d0d23804bb92efc1029d",
+      "userId": "u_admin",
+      "createdAt": 1793636015429,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "acd6185d749af5adaf526b46bc2856919472d9e4307c0716",
+      "userId": "u_admin",
+      "createdAt": 1793636166838,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "4380cf8c50060aaddd3c79062a5c43232119dd017c8dfd82",
+      "userId": "u_admin",
+      "createdAt": 1793637189405,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d5d9aec809a4919af80f19770496618669c026fa08cbe187",
+      "userId": "u_admin",
+      "createdAt": 1793650042426,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "66b53b2c7bbe2cf81e047babef754595ed89aaeefedd80ca",
+      "userId": "u_admin",
+      "createdAt": 1793651173185,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "eaabf0b47089ae7a0029e52c33f6c5ee9d601b3dc8b5aee1",
+      "userId": "u_admin",
+      "createdAt": 1793660085085,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "3e9fdf56087433fcf353866326576d71630831922ccc6dfd",
+      "userId": "u_admin",
+      "createdAt": 1793662126644,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "d7e808b3a931ef5d40202e35e443f1db1dd634ea7d3b90b2",
+      "userId": "u_admin",
+      "createdAt": 1793662126827,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "edecd3f44a766ff1d872e16519bb5c8fcbe78c9edc9f73f7",
+      "userId": "u_admin",
+      "createdAt": 1793723250020,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "6e4d3d36fb48ca30405b8d130e4127aafc79dc4cfdc35739",
+      "userId": "u_admin",
+      "createdAt": 1793724613482,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ab36f88730adc30a54330602102568cd96650818121afbd6",
+      "userId": "u_admin",
+      "createdAt": 1793726837893,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "de8f04b0096f553a8ee7ef1a7ec0c1be9755ea62a1f609bd",
+      "userId": "u_admin",
+      "createdAt": 1793729769882,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "8c0b0cfaaf91a0780489a5e40f4c71d6538ccb76ded8658c",
+      "userId": "u_admin",
+      "createdAt": 1793730000646,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "02d169ce77ac817eaea0dc96b35a1700879c4a498e827b35",
+      "userId": "u_admin",
+      "createdAt": 1793730000845,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ce55fb634329ac5160cd37fccfb5b112d4b315d7fed85c24",
+      "userId": "u_admin",
+      "createdAt": 1793730025617,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "6c5e3456992c1c0999f48029c7ce4e78161352621df3130a",
+      "userId": "u_admin",
+      "createdAt": 1793730056889,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f8f8afd2a603d6e841467037cb9d9a7273e8f1f09e20d4bb",
+      "userId": "u_admin",
+      "createdAt": 1793730057093,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "19ac49fec0e479e9c247399f8ca0afcd7f7237cdffe9f4db",
+      "userId": "u_admin",
+      "createdAt": 1793730078580,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "f0866547ea0480d10f51b5649585b477d0fcc3375fe43adf",
+      "userId": "u_admin",
+      "createdAt": 1793730107628,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "44562ac1801559de2b72de4eb06b1e96f7b4bf27490dff21",
+      "userId": "u_admin",
+      "createdAt": 1793730107832,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "cbc87bc78733f2557b882cc9d5d7c99975295eb1c12d7363",
+      "userId": "u_admin",
+      "createdAt": 1793730357789,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "6a995bae34714b1483684ec17b73b9d74a9a0e887bdee2da",
+      "userId": "u_admin",
+      "createdAt": 1793730358067,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "7d5fe995ef1d4043815ac4435901d1dde7b6a17e3d55b3ff",
+      "userId": "u_admin",
+      "createdAt": 1793730379431,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "9d4800401f3c7b4086c33d7c0e2e47088df643921319654e",
+      "userId": "u_admin",
+      "createdAt": 1793731520683,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "79c9f0282212edfffa96794f07ecebf44336afcfb3dbde69",
+      "userId": "u_admin",
+      "createdAt": 1793731520909,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "ba5f440a2ec81b2a008c95f8965d523f66942078acad5ec2",
+      "userId": "u_admin",
+      "createdAt": 1793731656326,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "db64f05ba0dbbc566235157edc61660f7e84f92435c87fac",
+      "userId": "u_admin",
+      "createdAt": 1793821913954,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "9c67143f7fed4116d746553e29e7b4ff466eca7474dd62a0",
+      "userId": "u_admin",
+      "createdAt": 1793822285451,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "6391011071176ffcb2f27049a41ef188c20f3a20c61c55ee",
+      "userId": "u_admin",
+      "createdAt": 1793822861654,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "7a4110245504b966ad541c8fe235fafdb427dea62232091b",
+      "userId": "u_admin",
+      "createdAt": 1793822886344,
+      "expiresAt": 1825360692620
+    },
+    {
+      "token": "b5821631571583058d64d48d29a75afe0cb37cabf9f36844",
+      "userId": "u_admin",
+      "createdAt": 1793825017863,
+      "expiresAt": 1825361017863
+    },
+    {
+      "token": "43004907409134b3202d4681e6dcab29020429ee19b497e9",
+      "userId": "u_admin",
+      "createdAt": 1793910088632,
+      "expiresAt": 1825446088632
+    }
+  ],
+  "assets": [
+    {
+      "symbol": "USDT",
+      "name": "Tether",
+      "decimals": 2,
+      "network": "BEP20",
+      "contract": "0x55d398326f99059fF775485246999027B3197955",
+      "enabled": true,
+      "depositEnabled": true
+    },
+    {
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 2,
+      "network": "BEP20",
+      "contract": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+      "enabled": true,
+      "depositEnabled": true
+    },
+    {
+      "symbol": "BNB",
+      "name": "BNB",
+      "decimals": 6,
+      "network": "BEP20",
+      "contract": "native",
+      "enabled": false,
+      "depositEnabled": true
+    },
+    {
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "decimals": 6,
+      "network": "BEP20",
+      "contract": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+      "enabled": false,
+      "depositEnabled": true
+    },
+    {
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "decimals": 8,
+      "network": "BEP20",
+      "contract": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+      "enabled": false,
+      "depositEnabled": true
+    }
+  ],
+  "fiats": [
+    {
+      "code": "SYP",
+      "name": "ليرة سورية",
+      "symbol": "ل.س",
+      "enabled": true
+    },
+    {
+      "code": "USD",
+      "name": "دولار أمريكي",
+      "symbol": "$",
+      "enabled": true
+    }
+  ],
+  "paymentTypes": [
+    {
+      "id": "SHAM_CASH",
+      "name": "شام كاش",
+      "icon": "wallet",
+      "enabled": true,
+      "fields": "name,address"
+    }
+  ],
+  "settings": {
+    "brand": "USDT شام",
+    "country": "SY",
+    "telegramBotUsername": "EntrepreneurMA_bot",
+    "ownerTelegramId": "1441524960",
+    "webAppUrl": "https://5173-9b12c5a1da8443a8.monkeycode-ai.live",
+    "bep20Address": "0xf4C0eD9f74fB9df4e8e6Bc1F3d80E012C26dcf6A",
+    "bep20Network": "BEP20",
+    "depositEnabled": true,
+    "withdrawEnabled": true,
+    "minDeposit": 10,
+    "minWithdraw": 10,
+    "withdrawFee": 0.2,
+    "depositFeePct": 0.1,
+    "withdrawFeePct": 0.25,
+    "transferFeePct": 0.1,
+    "priceRanges": [
+      {
+        "asset": "USDT",
+        "fiat": "SYP",
+        "min": 141,
+        "max": 160,
+        "sellMin": 141,
+        "sellMax": 160,
+        "buyMin": 130,
+        "buyMax": 140
+      },
+      {
+        "asset": "USDT",
+        "fiat": "USD",
+        "min": 1,
+        "max": 1.1,
+        "sellMin": 1,
+        "sellMax": 1.1,
+        "buyMin": 0.9,
+        "buyMax": 1
+      },
+      {
+        "asset": "USDT",
+        "fiat": "SYP",
+        "min": 143,
+        "max": 150,
+        "sellMin": 143,
+        "sellMax": 150,
+        "buyMin": 130,
+        "buyMax": 143
+      }
+    ],
+    "priceMode": "auto",
+    "buySpreadPct": 10,
+    "sellSpreadPct": 10,
+    "manualBuyPrice": 0,
+    "manualSellPrice": 0,
+    "priceApiUrl": "https://api-v2.sp-today.com/api/v1/currencies?lang=en",
+    "priceApiKey": "c78a764726d8091628e3fc1a1cf11ec0",
+    "priceApiKeyHeader": "X-API-Key",
+    "priceJsonPath": "/crypto/{syp}",
+    "featuredWeeklyTrades": 50,
+    "featuredHoldDays": 3,
+    "verifiedMerchantVolumeUsdt": 1500,
+    "featuredMerchantId": "",
+    "featuredGrantedAt": 0,
+    "featuredMerchantIdDemo": "",
+    "featuredGrantedAtDemo": 0,
+    "supportTelegramId": "1441524960",
+    "supportTelegramUsername": "Entrepreneurma",
+    "requirePaymentProof": true,
+    "requireKycForTrade": true,
+    "requireKycForAd": true,
+    "requireKycForDeposit": false,
+    "requireKycForWithdraw": true,
+    "requireMerchantForAd": true,
+    "advancedKycUsdt": 2000,
+    "treasuryWallets": [
+      {
+        "id": "tw_2cac8d436720e9cb",
+        "name": "الخزانه البارده",
+        "platform": "Trust wallet",
+        "address": "0xf4C0eD9f74fB9df4e8e6Bc1F3d80E012C26dcf6A",
+        "network": "BEP20",
+        "note": "الإيداع حصرياً عبر شبكة Binance Smart Chain (BEP20 / BSC). أي تحويل عبر شبكة أخرى سؤدي إلى ضياع الأموال نهائياً.\"",
+        "active": true,
+        "forDeposit": true,
+        "forWithdraw": true
+      },
+      {
+        "id": "tw_4085dc3a654ae2cf",
+        "name": "منصه مكسك",
+        "platform": "Mexc",
+        "address": "0x37c7d01d3e8323e79311ed6c4ad524cd14b5edf5",
+        "network": "BEP20",
+        "note": "الإيداع حصرياً عبر شبكة Binance Smart Chain (BEP20 / BSC). أي تحويل عبر شبكة أخرى سؤدي إلى ضياع الأموال نهائياً.\"",
+        "active": true,
+        "forDeposit": false,
+        "forWithdraw": true
+      }
+    ],
+    "appEnabled": true,
+    "appDisabledMessage": "المنصة متوقفة مؤقتاً للصيانة. حاول لاحقاً."
+  },
+  "kycRequests": [],
+  "deposits": [],
+  "withdrawals": [
+    {
+      "id": "wd_c082e855003f320e",
+      "userId": "u_admin",
+      "asset": "USDT",
+      "network": "BEP20",
+      "amount": 10,
+      "fee": 0.225,
+      "feePct": 0.25,
+      "flatFee": 0.2,
+      "total": 10.225,
+      "toAddress": "0x5918240effe9aac3667740a7b5e82c2498fd34d8",
+      "fromAddress": "0x37c7d01d3e8323e79311ed6c4ad524cd14b5edf5",
+      "treasuryWalletId": "tw_4085dc3a654ae2cf",
+      "treasuryWalletName": "منصه مكسك",
+      "treasuryWalletPlatform": "Mexc",
+      "status": "completed",
+      "note": "",
+      "txHash": "",
+      "createdAt": 1793829066264,
+      "reviewedAt": 1793829119173,
+      "reviewedBy": "u_admin"
+    }
+  ],
+  "transfers": [],
+  "uidCounter": 10000000,
+  "adCounter": 100005,
+  "supportTickets": [],
+  "deletedSupportIds": [
+    "sup_7f67c9f97ea15cf5",
+    "sup_9dfa1ba08d4b5b34"
+  ]
+}
