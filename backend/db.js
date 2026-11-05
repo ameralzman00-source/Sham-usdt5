@@ -11,7 +11,7 @@ const LEGACY_PREVIEW_HOST = "monkeycode-ai.live";
 function publicSiteUrlFromEnv() {
   const fromEnv = String(process.env.WEB_APP_URL || process.env.RENDER_EXTERNAL_URL || "").trim().replace(/\/$/, "");
   if (/^https:\/\//i.test(fromEnv)) return fromEnv;
-  return "";
+  return "https://sham-usdt5.onrender.com";
 }
 
 function isLegacyPreviewUrl(url) {
