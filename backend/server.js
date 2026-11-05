@@ -76,7 +76,8 @@ const {
   normalizeTreasuryWallets,
   activeDepositWallet,
   treasuryByAddress,
-  isPlatformTreasuryAddress
+  isPlatformTreasuryAddress,
+  publicSiteUrl
 } = require("./db");
 const kycStore = require("./kycStore");
 const evidenceStore = require("./evidenceStore");
@@ -468,7 +469,7 @@ app.get("/api/meta", async (req, res) => {
       brand: db.settings.brand || "USDT شام",
       country: db.settings.country || "SY",
       telegramBotUsername: db.settings.telegramBotUsername || "EntrepreneurMA_bot",
-      webAppUrl: db.settings.webAppUrl || "https://5173-9b12c5a1da8443a8.monkeycode-ai.live",
+      webAppUrl: publicSiteUrl(),
       bep20Address: (activeDepositWallet() && activeDepositWallet().address) || db.settings.bep20Address,
       bep20Network: "BEP20",
       depositWalletName: (activeDepositWallet() && activeDepositWallet().name) || "الخزينة",
@@ -3097,28 +3098,53 @@ setInterval(() => {
   if (changed) save();
 }, 15000);
 
-const ANDROID_APK = path.join(__dirname, "..", "releases", "usdt-sham.apk");
+const ANDROID_APK_CANDIDATES = [
+  path.join(__dirname, "..", "releases", "usdt-sham.apk"),
+  path.join(process.cwd(), "releases", "usdt-sham.apk"),
+  path.join(__dirname, "..", "frontend", "dist", "usdt-sham.apk"),
+  path.join(process.cwd(), "frontend", "dist", "usdt-sham.apk"),
+  path.join(__dirname, "..", "releases", "usdt-sham-v1.apk"),
+  path.join(process.cwd(), "releases", "usdt-sham-v1.apk")
+];
 const FRONTEND_DIST = path.join(__dirname, "..", "frontend", "dist");
 
-app.get("/download/android", (req, res) => {
-  if (!fs.existsSync(ANDROID_APK)) {
-    return res.status(404).send("ملف APK غير موجود. اطلب من الإدارة بناء نسخة جديدة.");
+function androidApkPath() {
+  return ANDROID_APK_CANDIDATES.find((file) => fs.existsSync(file)) || "";
+}
+
+function sendAndroidApk(_req, res) {
+  const file = androidApkPath();
+  if (!file) {
+    return res.status(404).type("text/plain; charset=utf-8").send("ملف APK غير موجود. اطلب من الإدارة بناء نسخة جديدة.");
   }
   res.setHeader("Content-Type", "application/vnd.android.package-archive");
-  res.setHeader("Content-Disposition", "attachment; filename=\"usdt-sham.apk\"");
-  res.sendFile(ANDROID_APK);
-});
+  res.setHeader("Content-Disposition", 'attachment; filename="usdt-sham.apk"');
+  res.setHeader("Cache-Control", "public, max-age=3600");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  return res.sendFile(path.resolve(file));
+}
+
+app.get(["/download/android", "/download/android.apk", "/download/usdt-sham.apk", "/usdt-sham.apk"], sendAndroidApk);
+app.head(["/download/android", "/download/android.apk", "/download/usdt-sham.apk", "/usdt-sham.apk"], sendAndroidApk);
 
 if (fs.existsSync(FRONTEND_DIST)) {
   app.use(express.static(FRONTEND_DIST));
   app.get("*", (req, res, next) => {
-    if (req.path.startsWith("/api") || req.path.startsWith("/download")) return next();
+    if (req.path.startsWith("/api") || req.path.startsWith("/download") || req.path === "/usdt-sham.apk") return next();
     res.sendFile(path.join(FRONTEND_DIST, "index.html"));
   });
 }
 
 app.listen(PORT, "0.0.0.0", () => {
+  const liveUrl = publicSiteUrl();
+  if (liveUrl && db.settings.webAppUrl !== liveUrl) {
+    db.settings.webAppUrl = liveUrl;
+    save();
+  }
   console.log(`USDT Sham API on ${PORT}`);
+  if (liveUrl) console.log(`Public URL: ${liveUrl}`);
+  const apk = androidApkPath();
+  console.log(apk ? `Android APK: ${apk}` : "Android APK missing from releases/");
   if (process.env.START_BOT === "1" || process.env.RENDER) {
     const out = botManager.start();
     if (!out.ok) console.log("bot:", out.error || "not started");

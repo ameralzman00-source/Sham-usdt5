@@ -45,7 +45,8 @@ const {
   replySupportTicket,
   closeSupportTicket,
   supportTickets,
-  activeDepositWallet
+  activeDepositWallet,
+  publicSiteUrl
 } = require("./db");
 const kycStore = require("./kycStore");
 const evidenceStore = require("./evidenceStore");
@@ -73,7 +74,7 @@ function assistantFor(user) {
 
 function webAppUrl() {
   reload();
-  return String((db.settings && db.settings.webAppUrl) || process.env.WEB_APP_URL || "https://5173-9b12c5a1da8443a8.monkeycode-ai.live").replace(/\/$/, "");
+  return publicSiteUrl();
 }
 
 function appIsDown() {

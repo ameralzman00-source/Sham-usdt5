@@ -83,6 +83,15 @@ function supportHref(settings) {
   return `https://t.me/${supportUsername(settings)}`;
 }
 
+function ApkDownloadButton({ className = "btn dark sm", label = "تحميل تطبيق أندرويد" }) {
+  return (
+    <a className={`${className} ico-btn`} href="/download/android" download="usdt-sham.apk">
+      <Icon name="download" />
+      <span>{label}</span>
+    </a>
+  );
+}
+
 function SupportButton({ settings, className = "btn ghost sm", label = "تواصل الدعم", telegram }) {
   const inner = (
     <>
@@ -812,6 +821,7 @@ function TelegramGate({ message }) {
             <p className="hint">من الموقع ادخل باسم المستخدم. لربط تلغرام افتح المنصة من البوت أو أنشئ رمز ربط من الحساب.</p>
             <div className="form-actions" style={{ justifyContent: "center" }}>
               <IcoAction className="btn outline" icon="bot" onClick={() => openTelegramBot(bot)}>تسجيل الدخول بتلغرام</IcoAction>
+              <ApkDownloadButton className="btn dark" />
               <SupportButton settings={meta.settings} className="btn ghost" />
             </div>
           </>
@@ -5830,8 +5840,8 @@ function BotPage() {
               </div>
               {code && <div className="notice" style={{ marginTop: 12 }}>أرسل للبوت: <span className="mono">/start LINK_{code}</span></div>}
               <div className="section-title" style={{ marginTop: 18 }}><h3>تطبيق أندرويد</h3></div>
-              <p className="hint" style={{ marginTop: 0 }}>حمّل تطبيق USDT شام بصيغة APK. إن ظهر تحذير التثبيت من مصادر غير معروفة فاسمح به من إعدادات المتصفح.</p>
-              <a className="btn dark sm" href={authedUrl("/download/android")} download="usdt-sham.apk">تحميل تطبيق أندرويد (APK)</a>
+              <p className="hint" style={{ marginTop: 0 }}>حمّل تطبيق USDT شام بصيغة APK. إن ظهر تحذير التثبيت من مصادر غير معروفة فاسمح به من إعدادات أندرويد.</p>
+              <ApkDownloadButton />
             </div>
           )}
           {secTab === "danger" && (
@@ -6259,6 +6269,7 @@ function HelpPage() {
           <IcoAction className="btn dark" icon="bot" type="button" onClick={() => openTelegramBot(meta.settings?.telegramBotUsername)}>
             فتح البوت
           </IcoAction>
+          <ApkDownloadButton className="btn dark" />
           <a className="btn ghost ico-btn" href="/api/help.pdf" target="_blank" rel="noreferrer">
             <Icon name="download" />
             <span>تحميل الدليل PDF</span>

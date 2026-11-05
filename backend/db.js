@@ -6,6 +6,30 @@ const DATA_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
   : path.join(__dirname, "data");
 const DB_PATH = path.join(DATA_DIR, "db.json");
+const LEGACY_PREVIEW_HOST = "monkeycode-ai.live";
+
+function publicSiteUrlFromEnv() {
+  const fromEnv = String(process.env.WEB_APP_URL || process.env.RENDER_EXTERNAL_URL || "").trim().replace(/\/$/, "");
+  if (/^https:\/\//i.test(fromEnv)) return fromEnv;
+  return "";
+}
+
+function isLegacyPreviewUrl(url) {
+  const value = String(url || "").trim().toLowerCase();
+  return !value || value.includes(LEGACY_PREVIEW_HOST);
+}
+
+function resolveWebAppUrl(stored) {
+  const live = publicSiteUrlFromEnv();
+  const current = String(stored || "").trim().replace(/\/$/, "");
+  if (live && isLegacyPreviewUrl(current)) return live;
+  if (/^https:\/\//i.test(current)) return current;
+  return live;
+}
+
+function publicSiteUrl() {
+  return resolveWebAppUrl(db.settings && db.settings.webAppUrl);
+}
 
 function hashPassword(password, salt) {
   const s = salt || crypto.randomBytes(16).toString("hex");
@@ -197,7 +221,7 @@ function defaultSettings() {
     country: "SY",
     telegramBotUsername: "EntrepreneurMA_bot",
     ownerTelegramId: "1441524960",
-    webAppUrl: "https://5173-9b12c5a1da8443a8.monkeycode-ai.live",
+    webAppUrl: publicSiteUrlFromEnv(),
     bep20Address: "0x4e5e8A2C91B6F3d1A0c7E4b9F8D2a6C1B0E3F847",
     bep20Network: "BEP20",
     depositEnabled: true,
@@ -853,7 +877,7 @@ function migrate(data) {
     country: "SY",
     telegramBotUsername: prevSettings.telegramBotUsername || "EntrepreneurMA_bot",
     ownerTelegramId: prevSettings.ownerTelegramId || "1441524960",
-    webAppUrl: prevSettings.webAppUrl || "https://5173-9b12c5a1da8443a8.monkeycode-ai.live",
+    webAppUrl: resolveWebAppUrl(prevSettings.webAppUrl),
     requireMerchantForAd: prevSettings.requireMerchantForAd === false ? false : true,
     advancedKycUsdt: Number(prevSettings.advancedKycUsdt) || 2000,
     priceRanges: Array.isArray(prevSettings.priceRanges)
@@ -2108,6 +2132,8 @@ module.exports = {
   save,
   load,
   reload,
+  publicSiteUrl,
+  resolveWebAppUrl,
   uid,
   now,
   hashPassword,
