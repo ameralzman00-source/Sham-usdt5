@@ -1,6 +1,19 @@
 const TOKEN_KEY = "pexora_token";
+const LIVE_ORIGIN = "https://sham-usdt5.onrender.com";
 
-const API_BASE = String(import.meta.env.VITE_API_BASE || "").replace(/\/$/, "");
+function detectApiBase() {
+  const env = String(import.meta.env.VITE_API_BASE || "").replace(/\/$/, "");
+  if (env) return env;
+  if (typeof window === "undefined") return "";
+  const proto = String(window.location.protocol || "");
+  const host = String(window.location.hostname || "");
+  const capacitor = !!(window.Capacitor || window.cordova);
+  if (capacitor || proto === "capacitor:" || proto === "ionic:" || proto === "file:") return LIVE_ORIGIN;
+  if (!host || host === "localhost" || host === "127.0.0.1" || host.endsWith(".localhost")) return LIVE_ORIGIN;
+  return "";
+}
+
+const API_BASE = detectApiBase();
 
 function withBase(path) {
   if (!API_BASE) return path;

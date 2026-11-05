@@ -6,6 +6,11 @@
 		"allowMixedContent": false
 	},
 	"server": {
-		"androidScheme": "https"
+		"url": "https://sham-usdt5.onrender.com",
+		"androidScheme": "https",
+		"cleartext": false,
+		"allowNavigation": [
+			"sham-usdt5.onrender.com"
+		]
 	}
 }
