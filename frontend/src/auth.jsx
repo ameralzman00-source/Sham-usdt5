@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { api, getToken, setToken } from "./api";
+import { api, getToken, setToken, getRememberPref } from "./api";
+import { markUnlocked } from "./appLock";
 
 const AuthCtx = createContext(null);
 
@@ -81,7 +82,7 @@ export function AuthProvider({ children }) {
               method: "POST",
               body: JSON.stringify({ initData })
             });
-            setToken(linked.token);
+            setToken(linked.token, getRememberPref());
             setUser(linked.user);
             setAuthError("");
             setNeedsTelegramChoice(false);
@@ -109,7 +110,7 @@ export function AuthProvider({ children }) {
               method: "POST",
               body: JSON.stringify({ initData, action: "auto" })
             });
-            setToken(data.token);
+            setToken(data.token, getRememberPref());
             setUser(data.user);
             setAuthError("");
             setNeedsTelegramChoice(false);
@@ -133,14 +134,16 @@ export function AuthProvider({ children }) {
     boot();
   }, []);
 
-  async function loginWithPassword(username, password, mode) {
+  async function loginWithPassword(username, password, mode, remember) {
+    const keep = remember !== false;
     const data = await api("/api/auth/login", {
       method: "POST",
-      body: JSON.stringify({ username, password, mode })
+      body: JSON.stringify({ username, password, mode, remember: keep })
     });
-    setToken(data.token);
+    setToken(data.token, keep);
     setUser(data.user);
     setAuthError("");
+    markUnlocked();
     if (tgInitData) {
       try {
         const linked = await api("/api/auth/telegram-link", {
@@ -156,14 +159,16 @@ export function AuthProvider({ children }) {
     return data.user;
   }
 
-  async function registerAccount(username, password, displayName, acceptTerms) {
+  async function registerAccount(username, password, displayName, acceptTerms, remember) {
+    const keep = remember !== false;
     const data = await api("/api/auth/register", {
       method: "POST",
-      body: JSON.stringify({ username, password, displayName, acceptTerms: !!acceptTerms })
+      body: JSON.stringify({ username, password, displayName, acceptTerms: !!acceptTerms, remember: keep })
     });
-    setToken(data.token);
+    setToken(data.token, keep);
     setUser(data.user);
     setAuthError("");
+    markUnlocked();
     if (tgInitData) {
       try {
         const linked = await api("/api/auth/telegram-link", {
@@ -184,16 +189,17 @@ export function AuthProvider({ children }) {
     if (!initData) throw new Error("افتح المنصة من زر البوت داخل تلغرام لتسجيل الدخول.");
     const data = await api("/api/auth/telegram", {
       method: "POST",
-      body: JSON.stringify({ initData, action: "auto" })
+      body: JSON.stringify({ initData, action: "auto", remember: getRememberPref() })
     });
     if (data.needsChoice) {
       setNeedsTelegramChoice(true);
       throw new Error("هذا التلغرام غير مرتبط بعد. اختر: حساب حالي أو إنشاء حساب جديد.");
     }
-    setToken(data.token);
+    setToken(data.token, getRememberPref());
     setUser(data.user);
     setAuthError("");
     setNeedsTelegramChoice(false);
+    markUnlocked();
     return data.user;
   }
 
@@ -202,12 +208,13 @@ export function AuthProvider({ children }) {
     if (!initData) throw new Error("افتح المنصة من داخل تلغرام.");
     const data = await api("/api/auth/telegram", {
       method: "POST",
-      body: JSON.stringify({ initData, action: "link", username, password })
+      body: JSON.stringify({ initData, action: "link", username, password, remember: getRememberPref() })
     });
-    setToken(data.token);
+    setToken(data.token, getRememberPref());
     setUser(data.user);
     setAuthError("");
     setNeedsTelegramChoice(false);
+    markUnlocked();
     return data.user;
   }
 
@@ -216,12 +223,13 @@ export function AuthProvider({ children }) {
     if (!initData) throw new Error("افتح المنصة من داخل تلغرام.");
     const data = await api("/api/auth/telegram", {
       method: "POST",
-      body: JSON.stringify({ initData, action: "create" })
+      body: JSON.stringify({ initData, action: "create", remember: getRememberPref() })
     });
-    setToken(data.token);
+    setToken(data.token, getRememberPref());
     setUser(data.user);
     setAuthError("");
     setNeedsTelegramChoice(false);
+    markUnlocked();
     return data.user;
   }
 
@@ -233,6 +241,7 @@ export function AuthProvider({ children }) {
     }
     setToken("");
     setUser(null);
+    try { sessionStorage.removeItem("pexora_applock_open"); } catch { /* ignore */ }
   }
 
   return (

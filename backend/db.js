@@ -218,6 +218,7 @@ function defaultPaymentTypes() {
 function defaultSettings() {
   return {
     brand: "USDT شام",
+    brandTagline: "منصة التداول P2P",
     country: "SY",
     telegramBotUsername: "EntrepreneurMA_bot",
     ownerTelegramId: "1441524960",
@@ -866,14 +867,24 @@ function bindOwnerAdmin(data) {
 const MERCHANT_BADGES = ["sponsored", "verified", "featured", "regular", "new"];
 
 function migrate(data) {
+  if (!data || typeof data !== "object") data = emptyDb();
+  if (!Array.isArray(data.users)) data.users = [];
+  if (!Array.isArray(data.wallets)) data.wallets = [];
+  if (!Array.isArray(data.paymentMethods)) data.paymentMethods = [];
+  if (!Array.isArray(data.ads)) data.ads = [];
+  if (!Array.isArray(data.orders)) data.orders = [];
+  if (!Array.isArray(data.messages)) data.messages = [];
+  if (!Array.isArray(data.notifications)) data.notifications = [];
+  if (!Array.isArray(data.sessions)) data.sessions = [];
   if (!Array.isArray(data.assets) || !data.assets.length) data.assets = defaultAssets();
-  data.fiats = defaultFiats();
-  data.paymentTypes = defaultPaymentTypes();
+  if (!Array.isArray(data.fiats) || !data.fiats.length) data.fiats = defaultFiats();
+  if (!Array.isArray(data.paymentTypes) || !data.paymentTypes.length) data.paymentTypes = defaultPaymentTypes();
   const prevSettings = data.settings || {};
   data.settings = {
     ...defaultSettings(),
     ...prevSettings,
-    brand: "USDT شام",
+    brand: String(prevSettings.brand || "USDT شام").trim().slice(0, 40) || "USDT شام",
+    brandTagline: String(prevSettings.brandTagline || "منصة التداول P2P").trim().slice(0, 60) || "منصة التداول P2P",
     country: "SY",
     telegramBotUsername: prevSettings.telegramBotUsername || "EntrepreneurMA_bot",
     ownerTelegramId: prevSettings.ownerTelegramId || "1441524960",
@@ -1194,25 +1205,89 @@ function applyDisk(parsed) {
   Object.assign(db, parsed);
 }
 
+const DB_BAK = `${DB_PATH}.bak`;
+const DB_BAK2 = `${DB_PATH}.bak2`;
+
+function parseDbFile(file) {
+  if (!file || !fs.existsSync(file)) return null;
+  const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
+  if (!parsed || typeof parsed !== "object") throw new Error("invalid db");
+  return migrate(parsed);
+}
+
+function dbFileHealthy(file) {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
+    return !!(parsed && typeof parsed === "object" && Array.isArray(parsed.users));
+  } catch {
+    return false;
+  }
+}
+
+function rotateDbBackups() {
+  if (!dbFileHealthy(DB_PATH)) return;
+  try {
+    if (fs.existsSync(DB_BAK)) {
+      const age = Date.now() - fs.statSync(DB_BAK).mtimeMs;
+      if (age < 60 * 60 * 1000) return;
+      fs.copyFileSync(DB_BAK, DB_BAK2);
+    }
+  } catch {
+    /* ignore */
+  }
+  try {
+    fs.copyFileSync(DB_PATH, DB_BAK);
+  } catch {
+    /* ignore */
+  }
+}
+
 function readDisk() {
-  if (!fs.existsSync(DB_PATH)) return null;
-  return migrate(JSON.parse(fs.readFileSync(DB_PATH, "utf8")));
+  return parseDbFile(DB_PATH);
+}
+
+function loadFromBackups() {
+  for (const file of [DB_BAK, DB_BAK2]) {
+    try {
+      const parsed = parseDbFile(file);
+      if (parsed) {
+        console.error(`db.json damaged; restored from ${path.basename(file)} (${(parsed.users || []).length} users)`);
+        return parsed;
+      }
+    } catch (err) {
+      console.error(`backup ${path.basename(file)} unreadable:`, err && err.message);
+    }
+  }
+  return null;
 }
 
 function load() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
   if (!fs.existsSync(DB_PATH)) {
+    const recovered = loadFromBackups();
+    if (recovered) {
+      db = recovered;
+      save();
+      return;
+    }
     db = seedDb();
     save();
     return;
   }
   try {
-    db = migrate(JSON.parse(fs.readFileSync(DB_PATH, "utf8")));
+    db = parseDbFile(DB_PATH);
     refreshFeaturedMerchant();
     save();
-  } catch {
-    db = seedDb();
-    save();
+  } catch (err) {
+    console.error("db.json parse failed, keeping user data via backup:", err && err.message);
+    const recovered = loadFromBackups();
+    if (recovered) {
+      db = recovered;
+      save();
+      return;
+    }
+    console.error("no healthy backup; leaving db.json untouched and using empty memory until a valid file exists");
+    db = emptyDb();
   }
 }
 
@@ -1244,7 +1319,21 @@ function saveLocked() {
   } catch {
     disk = null;
   }
+  if (!disk && fs.existsSync(DB_PATH) && !(db.users && db.users.length)) {
+    throw new Error("refusing to overwrite unreadable db.json with empty memory");
+  }
   if (disk) {
+    const diskUsers = disk.users || [];
+    const memUsers = db.users || [];
+    if (diskUsers.length && !memUsers.length) {
+      db.users = diskUsers;
+      db.wallets = disk.wallets || db.wallets;
+      db.paymentMethods = disk.paymentMethods || db.paymentMethods;
+      db.kycRequests = disk.kycRequests || db.kycRequests;
+      db.deposits = disk.deposits || db.deposits;
+      db.withdrawals = disk.withdrawals || db.withdrawals;
+      db.transfers = disk.transfers || db.transfers;
+    }
     db.messages = unionById(db.messages, disk.messages);
     db.orders = unionById(db.orders, disk.orders);
     db.notifications = mergeNotifications(db.notifications, disk.notifications);
@@ -1261,6 +1350,7 @@ function saveLocked() {
     });
     db.sessions = Array.from(sessMap.values()).filter((s) => s && s.expiresAt > Date.now() - 86400000);
   }
+  rotateDbBackups();
   const tmp = `${DB_PATH}.tmp`;
   fs.writeFileSync(tmp, JSON.stringify(db, null, 2));
   fs.renameSync(tmp, DB_PATH);
@@ -1270,6 +1360,8 @@ function save() {
   acquireLock();
   try {
     saveLocked();
+  } catch (err) {
+    console.error("db save skipped:", err && err.message);
   } finally {
     releaseLock();
   }

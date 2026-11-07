@@ -164,17 +164,19 @@ img {
   width: 38px;
   height: 38px;
   border-radius: 12px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 40%),
-    linear-gradient(135deg, #f3d56a, #b88914);
+  overflow: hidden;
   display: grid;
   place-items: center;
-  color: #1a1404;
-  font-weight: 800;
-  font-size: 16px;
-  letter-spacing: -0.04em;
-  box-shadow: 0 8px 20px rgba(201, 162, 39, 0.28);
+  background: #0a1a28;
+  box-shadow: 0 8px 20px rgba(10, 26, 40, 0.35);
   flex-shrink: 0;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .top-tool {
@@ -2349,6 +2351,11 @@ tbody tr:hover {
 .app-disabled-mask {
   z-index: 120;
   background: rgba(6, 8, 11, 0.92);
+}
+
+.app-lock-mask {
+  z-index: 130;
+  background: rgba(6, 8, 11, 0.94);
 }
 
 .totp-day-card {

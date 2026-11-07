@@ -2,7 +2,23 @@ import React, { useEffect, useState } from "react";
 import { NavLink, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAuth, openTelegramBot } from "./auth.jsx";
 import { useMeta } from "./meta.jsx";
-import { api, authedUrl, prepareFileForUpload } from "./api.js";
+import { api, authedUrl, prepareFileForUpload, getRememberPref } from "./api.js";
+import brandMark from "./assets/logo.png";
+import {
+  lockEnabled,
+  shouldShowLock,
+  markLocked,
+  verifyLockPin,
+  unlockWithBiometric,
+  setLockPin,
+  disableLock,
+  registerBiometric,
+  disableBiometric,
+  readLock,
+  biometricSupported,
+  pinDigits as lockPinDigits,
+  isValidLockPin
+} from "./appLock.js";
 
 const STATUS = {
   pending_payment: "بانتظار الدفع",
@@ -457,12 +473,17 @@ async function reloadApp({ refresh, reload } = {}) {
 }
 
 function Brand() {
+  const meta = useMeta();
+  const name = (meta.settings && meta.settings.brand) || "USDT شام";
+  const tagline = (meta.settings && meta.settings.brandTagline) || "منصة التداول P2P";
   return (
     <NavLink to="/" className="brand">
-      <span className="logo" aria-hidden="true">ش</span>
+      <span className="logo" aria-hidden="true">
+        <img src={brandMark} alt="" width="38" height="38" />
+      </span>
       <span className="brand-lockup">
-        <b>USDT شام</b>
-        <small>منصة التداول P2P</small>
+        <b>{name}</b>
+        <small>{tagline}</small>
       </span>
     </NavLink>
   );
@@ -675,6 +696,7 @@ function TelegramGate({ message }) {
   const [realTab, setRealTab] = useState("login");
   const [real, setReal] = useState({ username: "", password: "", displayName: "" });
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [rememberMe, setRememberMe] = useState(getRememberPref());
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
   const [tgStep, setTgStep] = useState(needsTelegramChoice ? "ask" : "");
@@ -696,9 +718,9 @@ function TelegramGate({ message }) {
       if (insideTelegram && tgStep === "has") {
         await linkTelegramAccount(real.username, real.password);
       } else if (realTab === "register") {
-        await registerAccount(real.username, real.password, real.displayName, true);
+        await registerAccount(real.username, real.password, real.displayName, true, rememberMe);
       } else {
-        await loginWithPassword(real.username, real.password, "real");
+        await loginWithPassword(real.username, real.password, "real", rememberMe);
       }
       nav("/");
     } catch (ex) {
@@ -743,7 +765,7 @@ function TelegramGate({ message }) {
     <div className="gate-wrap">
       <div className="card gate">
         <span className="pill gold">منصة P2P سورية · ضمان مشفّر</span>
-        <h2>ادخل إلى USDT شام</h2>
+        <h2>ادخل إلى {(meta.settings && meta.settings.brand) || "USDT شام"}</h2>
         <p>{message || "سجّل الدخول باسم مستخدم أو عبر تلغرام. الحسابات حقيقية فقط."}</p>
         {authError && <div className="error" style={{ width: "100%" }}>{authError}</div>}
 
@@ -807,6 +829,10 @@ function TelegramGate({ message }) {
               <label className="field">
                 <span>كلمة المرور</span>
                 <input type="password" value={real.password} onChange={(e) => setReal({ ...real, password: e.target.value })} autoComplete={realTab === "register" ? "new-password" : "current-password"} required />
+              </label>
+              <label className="check-row">
+                <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />
+                <span>حفظ تسجيل الدخول على هذا الجهاز</span>
               </label>
               {err && <div className="error">{err}</div>}
               <IcoAction type="submit" className="btn block" icon={realTab === "register" && tgStep !== "has" ? "plus" : "login"} disabled={busy || (realTab === "register" && tgStep !== "has" && !acceptTerms)}>
@@ -931,8 +957,8 @@ function Market() {
       <div className="card p2p-board" style={{ padding: 0 }}>
         <div className="p2p-brand-bar">
           <div className="p2p-brand-name">
-            <b>p2pSham-Syria</b>
-            <small>تداول ندّ لندّ</small>
+            <b>{(meta.settings && meta.settings.brand) || "USDT شام"}</b>
+            <small>{(meta.settings && meta.settings.brandTagline) || "تداول ندّ لندّ"}</small>
           </div>
           <div className="p2p-tools">
             <button type="button" className={board === "ads" ? "on" : ""} onClick={() => goBoard("ads")}>
@@ -4831,7 +4857,15 @@ function AdminPage() {
               {settingsSection === "platform" && (
                 <div className="form">
                   <div className="section-title"><h3><Icon name="platform" /> المنصة والتلغرام</h3></div>
-                  <p className="hint" style={{ marginTop: 0 }}>اسم البوت ورابط التطبيق المصغّر وقناة الدعم.</p>
+                  <p className="hint" style={{ marginTop: 0 }}>اسم المنصة يظهر في الموقع والتطبيق والبوت. أيقونة أندرويد تتحدث مع نسخة APK الجديدة.</p>
+                  <label className="field">
+                    <span>اسم المنصة</span>
+                    <input value={settings.brand || ""} onChange={(e) => setSettings({ ...settings, brand: e.target.value })} maxLength={40} placeholder="USDT شام" />
+                  </label>
+                  <label className="field">
+                    <span>الوصف المختصر</span>
+                    <input value={settings.brandTagline || ""} onChange={(e) => setSettings({ ...settings, brandTagline: e.target.value })} maxLength={60} placeholder="منصة التداول P2P" />
+                  </label>
                   <label className="field">
                     <span>اسم البوت (بدون @)</span>
                     <input value={settings.telegramBotUsername || ""} onChange={(e) => setSettings({ ...settings, telegramBotUsername: e.target.value })} placeholder="EntrepreneurMA_bot" />
@@ -5583,6 +5617,111 @@ function TradePinPanel({ user, refresh }) {
   );
 }
 
+function AppLockPanel() {
+  const lock = readLock();
+  const [pin, setPin] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [err, setErr] = useState("");
+  const [ok, setOk] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [tick, setTick] = useState(0);
+  const enabled = lock.enabled;
+  const bioOn = !!(lock.enabled && lock.bio);
+  const canBio = biometricSupported();
+
+  async function savePin(e) {
+    e.preventDefault();
+    setErr("");
+    setOk("");
+    if (pin !== confirm) {
+      setErr("الرمزان غير متطابقين.");
+      return;
+    }
+    if (!isValidLockPin(pin)) {
+      setErr("رمز القفل يجب أن يكون 4 إلى 6 أرقام وغير مكرر.");
+      return;
+    }
+    setBusy(true);
+    try {
+      await setLockPin(pin);
+      setPin("");
+      setConfirm("");
+      setOk(enabled ? "تم تغيير رمز قفل التطبيق." : "تم تفعيل قفل التطبيق على هذا الجهاز.");
+      setTick((n) => n + 1);
+    } catch (ex) {
+      setErr(ex.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function turnOff() {
+    setErr("");
+    setOk("");
+    disableLock();
+    setOk("أُلغي قفل التطبيق على هذا الجهاز.");
+    setTick((n) => n + 1);
+  }
+
+  async function toggleBio() {
+    setErr("");
+    setOk("");
+    setBusy(true);
+    try {
+      if (bioOn) {
+        await disableBiometric();
+        setOk("أُلغيت البصمة. يُفتح القفل برمز PIN فقط.");
+      } else {
+        await registerBiometric();
+        setOk("تم تفعيل البصمة أو الوجه على هذا الجهاز.");
+      }
+      setTick((n) => n + 1);
+    } catch (ex) {
+      setErr(ex.message || "تعذر تفعيل البصمة.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="profile-tab-body" key={tick}>
+      <div className="section-title">
+        <h3>قفل التطبيق</h3>
+        <span className={`pill ${enabled ? "green" : "gold"}`}>{enabled ? "مفعّل" : "غير مفعّل"}</span>
+      </div>
+      <p className="hint" style={{ marginTop: 0 }}>
+        يحمي فتح التطبيق على هذا الجهاز برمز PIN أو البصمة. لا يُرسل الرمز إلى الخادم ويبقى محلياً. يُطلب بعد إغلاق التطبيق أو تبديل النافذة.
+      </p>
+      {err && <div className="error">{err}</div>}
+      {ok && <div className="notice">{ok}</div>}
+      <form className="form" onSubmit={savePin}>
+        <div className="form-grid pin-grid">
+          <label className="field">
+            <span>{enabled ? "رمز القفل الجديد" : "رمز القفل"}</span>
+            <input className="pin-input" type="password" inputMode="numeric" autoComplete="off" maxLength={6} value={pin} onChange={(e) => setPin(lockPinDigits(e.target.value))} placeholder="••••" required />
+          </label>
+          <label className="field">
+            <span>تأكيد الرمز</span>
+            <input className="pin-input" type="password" inputMode="numeric" autoComplete="off" maxLength={6} value={confirm} onChange={(e) => setConfirm(lockPinDigits(e.target.value))} placeholder="••••" required />
+          </label>
+        </div>
+        <button className="btn" disabled={busy}>{busy ? "جاري الحفظ..." : enabled ? "تغيير رمز القفل" : "تفعيل قفل PIN"}</button>
+      </form>
+      {enabled && (
+        <div className="form-actions" style={{ marginTop: 12 }}>
+          {canBio && (
+            <IcoAction className={bioOn ? "btn dark" : "btn"} icon="shield" disabled={busy} onClick={toggleBio}>
+              {bioOn ? "إيقاف البصمة" : "تفعيل البصمة / الوجه"}
+            </IcoAction>
+          )}
+          <IcoAction className="btn ghost" icon="close" onClick={turnOff}>إلغاء القفل</IcoAction>
+        </div>
+      )}
+      {!canBio && enabled && <p className="hint">هذا المتصفح لا يدعم البصمة. استخدم رمز PIN.</p>}
+    </div>
+  );
+}
+
 function BotPage() {
   const { user, logout, refresh } = useAuth();
   const meta = useMeta();
@@ -5753,10 +5892,15 @@ function BotPage() {
                   <Icon name="lock" />
                   <span>كلمة المرور</span>
                 </button>
+                <button type="button" className={safeTab === "applock" ? "on" : ""} onClick={() => setSafeTab("applock")}>
+                  <Icon name="shield" />
+                  <span>قفل التطبيق</span>
+                </button>
               </div>
               {safeTab === "pin" && <TradePinPanel user={user} refresh={refresh} />}
               {safeTab === "totp" && <TotpPanel user={user} refresh={refresh} />}
               {safeTab === "password" && <PasswordPanel refresh={refresh} />}
+              {safeTab === "applock" && <AppLockPanel />}
             </div>
           )}
           {secTab === "photo" && (
@@ -5840,7 +5984,7 @@ function BotPage() {
               </div>
               {code && <div className="notice" style={{ marginTop: 12 }}>أرسل للبوت: <span className="mono">/start LINK_{code}</span></div>}
               <div className="section-title" style={{ marginTop: 18 }}><h3>تطبيق أندرويد</h3></div>
-              <p className="hint" style={{ marginTop: 0 }}>حمّل تطبيق USDT شام بصيغة APK. إن ظهر تحذير التثبيت من مصادر غير معروفة فاسمح به من إعدادات أندرويد.</p>
+              <p className="hint" style={{ marginTop: 0 }}>حمّل تطبيق {(meta.settings && meta.settings.brand) || "USDT شام"} بصيغة APK. إن ظهر تحذير التثبيت من مصادر غير معروفة فاسمح به من إعدادات أندرويد.</p>
               <ApkDownloadButton />
             </div>
           )}
@@ -6254,7 +6398,7 @@ function HelpPage() {
   return (
     <div className="page narrow">
       <PageHead
-        title={guide?.title || "دليل استخدام USDT شام"}
+        title={guide?.title || `دليل استخدام ${(meta.settings && meta.settings.brand) || "USDT شام"}`}
         subtitle={guide?.intro || "شروحات الشراء والبيع والتوثيق والمحفظة والضمان وشام كاش."}
       >
         <SupportButton settings={meta.settings} />
@@ -6391,11 +6535,145 @@ function TotpDayGate() {
   );
 }
 
+function AppLockGate() {
+  const { user } = useAuth();
+  const [open, setOpen] = useState(() => !!(user && shouldShowLock()));
+  const [pin, setPin] = useState("");
+  const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!user || !lockEnabled()) {
+      setOpen(false);
+      return undefined;
+    }
+    function sync() {
+      if (shouldShowLock()) setOpen(true);
+    }
+    function onHide() {
+      if (typeof document !== "undefined" && document.hidden) {
+        markLocked();
+        setOpen(true);
+      }
+    }
+    function onPageHide() {
+      markLocked();
+      setOpen(true);
+    }
+    sync();
+    document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("pagehide", onPageHide);
+    let cap;
+    try {
+      cap = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+      if (cap && cap.addListener) {
+        cap.addListener("appStateChange", (state) => {
+          if (state && state.isActive === false) {
+            markLocked();
+            setOpen(true);
+          }
+        });
+      }
+    } catch {
+      cap = null;
+    }
+    return () => {
+      document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("pagehide", onPageHide);
+    };
+  }, [user]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const lock = readLock();
+    if (lock.bio && biometricSupported()) {
+      unlockWithBiometric().then(() => {
+        setOpen(false);
+        setPin("");
+        setErr("");
+      }).catch(() => {});
+    }
+    return undefined;
+  }, [open]);
+
+  if (!user || !open) return null;
+
+  async function submit(e) {
+    e.preventDefault();
+    setErr("");
+    setBusy(true);
+    try {
+      await verifyLockPin(pin);
+      setPin("");
+      setOpen(false);
+    } catch (ex) {
+      setErr(ex.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function bio() {
+    setErr("");
+    setBusy(true);
+    try {
+      await unlockWithBiometric();
+      setPin("");
+      setOpen(false);
+    } catch (ex) {
+      setErr(ex.message || "تعذر فتح القفل بالبصمة.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const lock = readLock();
+  return (
+    <div className="totp-day-mask app-lock-mask">
+      <form className="card totp-day-card" onSubmit={submit}>
+        <h2>التطبيق مقفل</h2>
+        <p>أدخل رمز PIN أو استخدم البصمة للمتابعة. الجلسة محفوظة ولن تُسجّل خروجك.</p>
+        <label className="field">
+          <span>رمز القفل</span>
+          <input
+            className="pin-input"
+            type="password"
+            inputMode="numeric"
+            autoComplete="off"
+            maxLength={6}
+            value={pin}
+            onChange={(e) => setPin(lockPinDigits(e.target.value))}
+            placeholder="••••"
+            required
+          />
+        </label>
+        {err && <div className="error">{err}</div>}
+        <button className="btn block" disabled={busy}>{busy ? "جاري التحقق..." : "فتح"}</button>
+        {lock.bio && biometricSupported() && (
+          <IcoAction className="btn dark block" icon="shield" disabled={busy} onClick={bio}>فتح بالبصمة / الوجه</IcoAction>
+        )}
+      </form>
+    </div>
+  );
+}
+
+function BrandTitle() {
+  const meta = useMeta();
+  const name = (meta.settings && meta.settings.brand) || "USDT شام";
+  const tagline = (meta.settings && meta.settings.brandTagline) || "تداول ند للند في سوريا";
+  useEffect(() => {
+    document.title = `${name} | ${tagline}`;
+  }, [name, tagline]);
+  return null;
+}
+
 export default function App() {
   return (
     <div className="app-shell">
+      <BrandTitle />
       <Topbar />
       <AppDisabledGate />
+      <AppLockGate />
       <TotpDayGate />
       <Routes>
         <Route path="/" element={<Market />} />

@@ -1,4 +1,5 @@
 const TOKEN_KEY = "pexora_token";
+const REMEMBER_KEY = "pexora_remember";
 const LIVE_ORIGIN = "https://sham-usdt5.onrender.com";
 
 function detectApiBase() {
@@ -22,13 +23,29 @@ function withBase(path) {
   return `${API_BASE}${p.startsWith("/") ? p : `/${p}`}`;
 }
 
-export function getToken() {
-  return localStorage.getItem(TOKEN_KEY) || "";
+export function getRememberPref() {
+  return localStorage.getItem(REMEMBER_KEY) !== "0";
 }
 
-export function setToken(token) {
-  if (token) localStorage.setItem(TOKEN_KEY, token);
-  else localStorage.removeItem(TOKEN_KEY);
+export function getToken() {
+  return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) || "";
+}
+
+export function setToken(token, remember) {
+  if (!token) {
+    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
+    return;
+  }
+  const keep = remember !== false;
+  localStorage.setItem(REMEMBER_KEY, keep ? "1" : "0");
+  if (keep) {
+    localStorage.setItem(TOKEN_KEY, token);
+    sessionStorage.removeItem(TOKEN_KEY);
+  } else {
+    sessionStorage.setItem(TOKEN_KEY, token);
+    localStorage.removeItem(TOKEN_KEY);
+  }
 }
 
 export async function api(path, options = {}) {

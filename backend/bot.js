@@ -88,6 +88,16 @@ function downMessage() {
   return String((db.settings && db.settings.appDisabledMessage) || "المنصة متوقفة مؤقتاً للصيانة. حاول لاحقاً.");
 }
 
+function brandName() {
+  reload();
+  return String((db.settings && db.settings.brand) || "USDT شام").trim() || "USDT شام";
+}
+
+function brandTagline() {
+  reload();
+  return String((db.settings && db.settings.brandTagline) || "منصة التداول P2P").trim() || "منصة التداول P2P";
+}
+
 function notifyHref(n, user) {
   const extra = (n && n.extra) || {};
   if (n && n.href) return n.href.startsWith("http") ? n.href : `${webAppUrl()}${n.href}`;
@@ -250,7 +260,7 @@ if (!TOKEN) {
     }
     await bot.sendChatAction(chatId, "upload_document");
     const caption = [
-      "تطبيق USDT شام لأندرويد.",
+      `تطبيق ${brandName()} لأندرويد.`,
       "تلغرام يمنع إرسال APK مباشرة، لذلك الملف مضغوط ZIP.",
       "1) احذف أي نسخة قديمة من التطبيق.",
       "2) افتح الملف من هذه المحادثة وفك الضغط.",
@@ -305,7 +315,7 @@ if (!TOKEN) {
       : "";
     bot.sendMessage(
       msg.chat.id,
-      `أهلاً ${user.displayName}\nمنصة USDT شام لتداول التيثر في سوريا.\nشراء وبيع USDT مقابل الليرة السورية أو الدولار عبر شام كاش.${extra}\nاضغط فتح المنصة لدخول الموقع داخل تلغرام.`,
+      `أهلاً ${user.displayName}\nمنصة ${brandName()} لتداول التيثر في سوريا.\n${brandTagline()}. شراء وبيع USDT مقابل الليرة السورية أو الدولار عبر شام كاش.${extra}\nاضغط فتح المنصة لدخول الموقع داخل تلغرام.`,
       { reply_markup: mainKeyboard(user) }
     );
     bot.sendMessage(msg.chat.id, "افتح المنصة داخل تلغرام، أو اطلب التطبيق ليُرسل إليك كملف داخل المحادثة:", {
@@ -1935,7 +1945,7 @@ if (!TOKEN) {
     const openSupport = (db.supportTickets || []).filter((t) => t.status === "open" && !t.isDemo).length;
     bot.sendMessage(
       chatId,
-      `لوحة إدارة USDT شام\nالمستخدمون: ${users.length}\nKYC معلّق: ${pendingKyc}\nطلب تاجر معلّق: ${pendingMerchants}\nإيداعات معلّقة: ${pendingDeps}\nسحوبات معلّقة: ${pendingWds}\nنزاعات: ${disputed}\nدعم مفتوح: ${openSupport}\nالحسابات التجريبية معزولة ولا تظهر هنا.`,
+      `لوحة إدارة ${brandName()}\nالمستخدمون: ${users.length}\nKYC معلّق: ${pendingKyc}\nطلب تاجر معلّق: ${pendingMerchants}\nإيداعات معلّقة: ${pendingDeps}\nسحوبات معلّقة: ${pendingWds}\nنزاعات: ${disputed}\nدعم مفتوح: ${openSupport}\nالحسابات التجريبية معزولة ولا تظهر هنا.`,
       {
         reply_markup: {
           inline_keyboard: [

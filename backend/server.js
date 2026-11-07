@@ -95,7 +95,9 @@ const { adminSections, userSections } = require("./guideContent");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const TOKEN_TTL = 365 * 24 * 60 * 60 * 1000;
+const TOKEN_TTL_LONG = 365 * 24 * 60 * 60 * 1000;
+const TOKEN_TTL_SHORT = 12 * 60 * 60 * 1000;
+const TOKEN_TTL = TOKEN_TTL_LONG;
 
 app.use(cors());
 app.use(express.json({ limit: "30mb" }));
@@ -114,11 +116,16 @@ app.use((err, req, res, next) => {
   return next(err);
 });
 
+function sessionTtl(session) {
+  return session && session.remember === false ? TOKEN_TTL_SHORT : TOKEN_TTL_LONG;
+}
+
 function touchSession(session) {
   if (!session) return;
+  const ttl = sessionTtl(session);
   const remain = (session.expiresAt || 0) - now();
-  if (remain < TOKEN_TTL / 2) {
-    session.expiresAt = now() + TOKEN_TTL;
+  if (remain < ttl / 2) {
+    session.expiresAt = now() + ttl;
     session.touchedAt = now();
     save();
   }
@@ -197,13 +204,16 @@ app.use((req, res, next) => {
   next();
 });
 
-function createSession(userId) {
+function createSession(userId, remember) {
+  const keep = remember !== false;
+  const ttl = keep ? TOKEN_TTL_LONG : TOKEN_TTL_SHORT;
   const token = crypto.randomBytes(24).toString("hex");
   db.sessions.push({
     token,
     userId,
+    remember: keep,
     createdAt: now(),
-    expiresAt: now() + TOKEN_TTL
+    expiresAt: now() + ttl
   });
   save();
   return token;
@@ -439,7 +449,7 @@ function slugId(value, fallback) {
 }
 
 app.get("/api/health", (req, res) => {
-  res.json({ ok: true, name: "USDT شام", time: now() });
+  res.json({ ok: true, name: db.settings.brand || "USDT شام", time: now() });
 });
 
 app.get("/api/help", (_req, res) => {
@@ -448,7 +458,7 @@ app.get("/api/help", (_req, res) => {
 
 app.get("/api/help.pdf", (_req, res) => {
   try {
-    const pdf = buildPdf("دليل المستخدم — USDT شام", userSections());
+    const pdf = buildPdf(`دليل المستخدم — ${db.settings.brand || "USDT شام"}`, userSections());
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=\"usdt-sham-user-guide.pdf\"");
     res.send(pdf);
@@ -467,6 +477,7 @@ app.get("/api/meta", async (req, res) => {
     paymentTypes: getPaymentTypes(),
     settings: {
       brand: db.settings.brand || "USDT شام",
+      brandTagline: db.settings.brandTagline || "منصة التداول P2P",
       country: db.settings.country || "SY",
       telegramBotUsername: db.settings.telegramBotUsername || "EntrepreneurMA_bot",
       webAppUrl: publicSiteUrl(),
@@ -577,10 +588,10 @@ app.post("/api/auth/register", (req, res) => {
       frozen: 0
     });
   });
-  const token = createSession(user.id);
-  notify(user.id, "مرحباً بك في USDT شام", "تم إنشاء حسابك. أكمل توثيق KYC ثم أودع عبر BEP20 لبدء التداول.");
+  const token = createSession(user.id, (req.body || {}).remember !== false);
+  notify(user.id, `مرحباً بك في ${db.settings.brand || "USDT شام"}`, "تم إنشاء حسابك. أكمل توثيق KYC ثم أودع عبر BEP20 لبدء التداول.");
   save();
-  res.json({ token, user: publicUser(user) });
+  res.json({ token, user: publicUser(user), remember: (req.body || {}).remember !== false });
 });
 
 function dayKey(ts) {
@@ -603,7 +614,7 @@ function requireTotpCode(user, code, { requiredIfEnabled = true } = {}) {
 }
 
 app.post("/api/auth/login", (req, res) => {
-  const { username, password } = req.body || {};
+  const { username, password, remember } = req.body || {};
   if (!username || !password) return res.status(400).json({ error: "بيانات ناقصة" });
   const key = String(username).trim().toLowerCase();
   const user = db.users.find((u) => u.username === key || u.email === key);
@@ -613,10 +624,12 @@ app.post("/api/auth/login", (req, res) => {
   if (rejectDemo(user) || DEMO_LOGINS.has(key)) {
     return res.status(401).json({ error: "بيانات الدخول غير صحيحة" });
   }
-  const token = createSession(user.id);
+  const keep = remember !== false;
+  const token = createSession(user.id, keep);
   res.json({
     token,
     user: publicUser(user),
+    remember: keep,
     frozen: !!(user.accountFrozen || user.fundsFrozen),
     totpDayRequired: !!(user.totpEnabled && !totpDayVerified(user))
   });
@@ -700,8 +713,9 @@ app.post("/api/auth/telegram", (req, res) => {
   }
   if (!user) return res.status(401).json({ error: "تعذر إنشاء الحساب من تلغرام" });
   if (rejectDemo(user)) return res.status(401).json({ error: "الحسابات التجريبية غير متاحة" });
-  const token = createSession(user.id);
-  res.json({ token, user: publicUser(user), linked: true, needsChoice: false });
+  const keep = (req.body || {}).remember !== false;
+  const token = createSession(user.id, keep);
+  res.json({ token, user: publicUser(user), linked: true, needsChoice: false, remember: keep });
 });
 
 app.post("/api/auth/telegram-link", auth, (req, res) => {
@@ -2376,7 +2390,7 @@ app.get("/api/admin/kyc/:userId/print", auth, adminOnly, (req, res) => {
 </head>
 <body>
   <p class="noprint"><button onclick="window.print()">طباعة / حفظ PDF</button></p>
-  <h1>USDT شام — ملف توثيق الهوية</h1>
+  <h1>${escapeHtml(db.settings.brand || "USDT شام")} — ملف توثيق الهوية</h1>
   <p>نسخة إدارية رسمية للمراجعة والطباعة</p>
   <div class="meta">
     <div><div class="label">اسم المستخدم</div>${escapeHtml(user.username)}</div>
@@ -2590,7 +2604,7 @@ app.get("/api/admin/catalog", auth, adminOnly, (req, res) => {
 
 app.get("/api/admin/guide.pdf", auth, adminOnly, (_req, res) => {
   try {
-    const pdf = buildPdf("دليل الإدارة — USDT شام", adminSections());
+    const pdf = buildPdf(`دليل الإدارة — ${db.settings.brand || "USDT شام"}`, adminSections());
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=\"usdt-sham-admin-guide.pdf\"");
     res.send(pdf);
@@ -2643,6 +2657,14 @@ app.post("/api/admin/settings", auth, adminOnly, (req, res) => {
   if (body.bep20Address) {
     if (!isValidAddress(body.bep20Address)) return res.status(400).json({ error: "عنوان BEP20 غير صالح" });
     db.settings.bep20Address = String(body.bep20Address).trim();
+  }
+  if (body.brand != null) {
+    const brand = String(body.brand || "").trim().replace(/\s+/g, " ").slice(0, 40);
+    if (brand.length < 2) return res.status(400).json({ error: "اسم المنصة يجب أن يكون حرفين على الأقل" });
+    db.settings.brand = brand;
+  }
+  if (body.brandTagline != null) {
+    db.settings.brandTagline = String(body.brandTagline || "").trim().slice(0, 60);
   }
   if (body.telegramBotUsername) {
     db.settings.telegramBotUsername = String(body.telegramBotUsername).replace(/^@/, "").slice(0, 40);
