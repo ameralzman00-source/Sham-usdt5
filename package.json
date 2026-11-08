@@ -1,6 +1,6 @@
 {
   "name": "usdt-sham",
-  "version": "1.0.0",
+  "version": "3.01",
   "private": true,
   "scripts": {
     "start": "node backend/server.js",

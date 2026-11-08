@@ -19,6 +19,13 @@ import {
   pinDigits as lockPinDigits,
   isValidLockPin
 } from "./appLock.js";
+import {
+  ensureNotifyPermission,
+  armNotifyPermission,
+  unseenNotices,
+  markNoticesSeen,
+  showNativeNotice
+} from "./nativeNotify.js";
 
 const STATUS = {
   pending_payment: "بانتظار الدفع",
@@ -2702,6 +2709,7 @@ function NotificationsPage() {
   const [items, setItems] = useState([]);
   const [unread, setUnread] = useState(0);
   const [err, setErr] = useState("");
+  const [notifyHint, setNotifyHint] = useState("");
 
   async function load() {
     const d = await api("/api/notifications");
@@ -2728,8 +2736,19 @@ function NotificationsPage() {
     <div className="page narrow">
       <PageHead title="الإشعارات" subtitle={unread ? `${unread} إشعار غير مقروء` : "كل إشعاراتك في مكان واحد."}>
         <SupportButton settings={meta.settings} />
+        <button
+          type="button"
+          className="btn ghost sm"
+          onClick={async () => {
+            const ok = await ensureNotifyPermission();
+            setNotifyHint(ok ? "تم تفعيل تنبيهات الجهاز." : "فعّل الإشعارات من إعدادات التطبيق ثم أعد المحاولة.");
+          }}
+        >
+          تفعيل الرنين
+        </button>
         {unread > 0 && <button className="btn ghost sm" onClick={markAll}>تعليم الكل كمقروء</button>}
       </PageHead>
+      {notifyHint && <div className="success" style={{ marginBottom: 12 }}>{notifyHint}</div>}
       {err && <div className="error" style={{ marginBottom: 12 }}>{err}</div>}
       <div className="card" style={{ padding: 0 }}>
         {items.length === 0 ? (
@@ -6667,11 +6686,57 @@ function BrandTitle() {
   return null;
 }
 
+function NativeNoticeWatcher() {
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) return undefined;
+    let stop = false;
+    let primed = false;
+    armNotifyPermission();
+    ensureNotifyPermission().catch(() => {});
+
+    async function tick() {
+      try {
+        const d = await api("/api/notifications");
+        const items = d.notifications || [];
+        const fresh = unseenNotices(items);
+        if (stop) return;
+        if (!primed) {
+          primed = true;
+          markNoticesSeen(items.map((n) => n.id).filter(Boolean));
+          return;
+        }
+        for (const n of fresh) {
+          await showNativeNotice({
+            title: n.title,
+            body: n.body,
+            href: notificationHref(n)
+          });
+        }
+        if (fresh.length) markNoticesSeen(fresh.map((n) => n.id));
+      } catch {
+        /* ignore */
+      }
+    }
+
+    tick();
+    const t = setInterval(tick, 8000);
+    return () => {
+      stop = true;
+      clearInterval(t);
+    };
+  }, [user]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <div className="app-shell">
       <BrandTitle />
       <Topbar />
+      <NativeNoticeWatcher />
       <AppDisabledGate />
       <AppLockGate />
       <TotpDayGate />

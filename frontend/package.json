@@ -1,6 +1,6 @@
 {
   "name": "p2p-frontend",
-  "version": "1.0.0",
+  "version": "3.01",
   "private": true,
   "type": "module",
   "scripts": {

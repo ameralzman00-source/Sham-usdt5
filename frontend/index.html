@@ -10,6 +10,38 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
       (function () {
+        function stubPush() {
+          try {
+            var cap = window.Capacitor;
+            if (!cap) return;
+            var plugins = cap.Plugins || (cap.Plugins = {});
+            var noop = function () { return Promise.resolve({ receive: "granted" }); };
+            plugins.PushNotifications = {
+              register: function () { return Promise.resolve({}); },
+              unregister: function () { return Promise.resolve(); },
+              requestPermissions: noop,
+              checkPermissions: noop,
+              getDeliveredNotifications: function () { return Promise.resolve({ notifications: [] }); },
+              removeAllDeliveredNotifications: function () { return Promise.resolve(); },
+              addListener: function () { return Promise.resolve({ remove: function () {} }); },
+              removeAllListeners: function () { return Promise.resolve(); }
+            };
+            if (typeof cap.toNative === "function" && !cap.__shamPushGuard) {
+              var native = cap.toNative.bind(cap);
+              cap.toNative = function (plugin, method, options, callback) {
+                if (String(plugin || "") === "PushNotifications" && String(method || "") === "register") {
+                  return "";
+                }
+                return native(plugin, method, options, callback);
+              };
+              cap.__shamPushGuard = true;
+            }
+          } catch (e) {}
+        }
+        stubPush();
+        document.addEventListener("deviceready", stubPush);
+        setTimeout(stubPush, 0);
+        setTimeout(stubPush, 300);
         var tg = window.Telegram && window.Telegram.WebApp;
         if (!tg) return;
         try { tg.ready(); } catch (e) {}
