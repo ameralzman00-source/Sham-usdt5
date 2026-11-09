@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-const { supabaseEnabled, pullSnapshot, queueSnapshot } = require("./supabaseStore");
+const { supabaseEnabled, pullSnapshot, queueSnapshot, ensureAppStateTable } = require("./supabaseStore");
 
 const BUNDLED_DATA_DIR = path.join(__dirname, "data");
 const DATA_DIR = process.env.DATA_DIR
@@ -1443,6 +1443,7 @@ async function hydrateFromSupabase() {
     return false;
   }
   try {
+    await ensureAppStateTable();
     const remote = await pullSnapshot();
     if (!snapshotHasUsers(remote)) {
       ensureAdminAccount(db);

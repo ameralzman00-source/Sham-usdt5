@@ -1,5 +1,12 @@
+const fs = require("fs");
+const path = require("path");
+
 const TABLE = "app_state";
 const ROW_ID = "main";
+const CREATE_SQL = `${fs.readFileSync(path.join(__dirname, "supabase.sql"), "utf8")}
+
+notify pgrst, 'reload schema';
+`;
 
 function strip(value) {
   return String(value || "")
@@ -17,11 +24,46 @@ function supabaseConfig() {
       ""
   );
   if (!url || !key) return null;
+  if (/^postgres(ql)?:\/\//i.test(url)) return null;
   return { url, key };
 }
 
+function postgresUrl() {
+  const direct = strip(
+    process.env.USER_SUPABASE_DB_URL ||
+      process.env.DATABASE_URL ||
+      process.env.SUPABASE_DB_URL ||
+      process.env.POSTGRES_URL ||
+      process.env.USER_SUPABASE_URL ||
+      process.env.SUPABASE_URL ||
+      ""
+  );
+  if (/^postgres(ql)?:\/\//i.test(direct)) return direct;
+  const password = strip(
+    process.env.USER_SUPABASE_DB_PASSWORD ||
+      process.env.SUPABASE_DB_PASSWORD ||
+      process.env.POSTGRES_PASSWORD ||
+      ""
+  );
+  const rest = supabaseConfig();
+  if (!password || !rest) return null;
+  let ref = "";
+  try {
+    ref = new URL(rest.url).hostname.split(".")[0];
+  } catch {
+    return null;
+  }
+  if (!ref) return null;
+  const encoded = encodeURIComponent(password);
+  const region = strip(process.env.USER_SUPABASE_DB_REGION || process.env.SUPABASE_DB_REGION || "");
+  if (region) {
+    return `postgresql://postgres.${ref}:${encoded}@aws-0-${region}.pooler.supabase.com:6543/postgres?sslmode=require`;
+  }
+  return `postgresql://postgres:${encoded}@db.${ref}.supabase.co:5432/postgres?sslmode=require`;
+}
+
 function supabaseEnabled() {
-  return !!supabaseConfig();
+  return !!(supabaseConfig() || postgresUrl());
 }
 
 function headers(key, prefer) {
@@ -59,32 +101,151 @@ async function fetchJson(url, opts, ms) {
   }
 }
 
+function missingTableError(err) {
+  const msg = String((err && err.message) || "");
+  const body = err && err.body;
+  const code = body && typeof body === "object" ? String(body.code || "") : "";
+  return (
+    (err && err.status === 404) ||
+    code === "PGRST205" ||
+    code === "42P01" ||
+    /could not find the table|relation .* does not exist|PGRST205|42P01/i.test(msg)
+  );
+}
+
+async function restTableReady() {
+  const cfg = supabaseConfig();
+  if (!cfg) return false;
+  try {
+    await fetchJson(
+      `${cfg.url}/rest/v1/${TABLE}?select=id&limit=1`,
+      { headers: headers(cfg.key) }
+    );
+    return true;
+  } catch (err) {
+    if (missingTableError(err)) return false;
+    throw err;
+  }
+}
+
+async function createTableViaPostgres() {
+  const url = postgresUrl();
+  if (!url) {
+    throw new Error("missing USER_SUPABASE_DB_URL or USER_SUPABASE_DB_PASSWORD to create app_state");
+  }
+  let Client;
+  try {
+    ({ Client } = require("pg"));
+  } catch {
+    throw new Error("pg module missing");
+  }
+  const client = new Client({
+    connectionString: url,
+    ssl: { rejectUnauthorized: false },
+    connectionTimeoutMillis: 12000
+  });
+  await client.connect();
+  try {
+    await client.query(CREATE_SQL);
+  } finally {
+    try {
+      await client.end();
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+let ensurePromise = null;
+
+async function ensureAppStateTableOnce() {
+  if (!supabaseEnabled()) return false;
+  try {
+    if (await restTableReady()) return true;
+  } catch (err) {
+    if (!missingTableError(err)) {
+      console.error("supabase table check:", err && err.message);
+    }
+  }
+  try {
+    await createTableViaPostgres();
+    console.log("created public.app_state in Supabase");
+  } catch (err) {
+    console.error("supabase create app_state:", err && err.message);
+    return false;
+  }
+  for (let i = 0; i < 8; i += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 400 + i * 200));
+    try {
+      if (await restTableReady()) return true;
+    } catch (err) {
+      if (!missingTableError(err)) break;
+    }
+  }
+  return false;
+}
+
+function ensureAppStateTable() {
+  if (!ensurePromise) ensurePromise = ensureAppStateTableOnce();
+  return ensurePromise;
+}
+
 async function pullSnapshot() {
   const cfg = supabaseConfig();
   if (!cfg) return null;
-  const rows = await fetchJson(
-    `${cfg.url}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(ROW_ID)}&select=payload,updated_at`,
-    { headers: headers(cfg.key, "return=representation") }
-  );
-  const row = Array.isArray(rows) ? rows[0] : rows;
-  if (!row || !row.payload || typeof row.payload !== "object") return null;
-  return row.payload;
+  await ensureAppStateTable();
+  try {
+    const rows = await fetchJson(
+      `${cfg.url}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(ROW_ID)}&select=payload,updated_at`,
+      { headers: headers(cfg.key, "return=representation") }
+    );
+    const row = Array.isArray(rows) ? rows[0] : rows;
+    if (!row || !row.payload || typeof row.payload !== "object") return null;
+    return row.payload;
+  } catch (err) {
+    if (missingTableError(err)) {
+      ensurePromise = null;
+      await ensureAppStateTable();
+      return null;
+    }
+    throw err;
+  }
 }
 
 async function pushSnapshot(payload) {
   const cfg = supabaseConfig();
   if (!cfg) return false;
   if (!payload || typeof payload !== "object") return false;
-  await fetchJson(`${cfg.url}/rest/v1/${TABLE}`, {
-    method: "POST",
-    headers: headers(cfg.key, "resolution=merge-duplicates,return=minimal"),
-    body: JSON.stringify({
-      id: ROW_ID,
-      payload,
-      updated_at: new Date().toISOString()
-    })
-  });
-  return true;
+  await ensureAppStateTable();
+  try {
+    await fetchJson(`${cfg.url}/rest/v1/${TABLE}`, {
+      method: "POST",
+      headers: headers(cfg.key, "resolution=merge-duplicates,return=minimal"),
+      body: JSON.stringify({
+        id: ROW_ID,
+        payload,
+        updated_at: new Date().toISOString()
+      })
+    });
+    return true;
+  } catch (err) {
+    if (missingTableError(err)) {
+      ensurePromise = null;
+      const ok = await ensureAppStateTable();
+      if (!ok) throw err;
+      await fetchJson(`${cfg.url}/rest/v1/${TABLE}`, {
+        method: "POST",
+        headers: headers(cfg.key, "resolution=merge-duplicates,return=minimal"),
+        body: JSON.stringify({
+          id: ROW_ID,
+          payload,
+          updated_at: new Date().toISOString()
+        })
+      });
+      return true;
+    }
+    throw err;
+  }
 }
 
 let pending = null;
@@ -123,6 +284,7 @@ async function flushSnapshots() {
 
 module.exports = {
   supabaseEnabled,
+  ensureAppStateTable,
   pullSnapshot,
   pushSnapshot,
   queueSnapshot
