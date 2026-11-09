@@ -7,6 +7,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(NativeNotifyPlugin.class);
+        registerPlugin(NativeBiometricPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

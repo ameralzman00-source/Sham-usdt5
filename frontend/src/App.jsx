@@ -6,12 +6,15 @@ import { api, authedUrl, prepareFileForUpload, getRememberPref } from "./api.js"
 import brandMark from "./assets/logo.png";
 import {
   lockEnabled,
+  lockHasPin,
+  lockHasBio,
   shouldShowLock,
   markLocked,
   verifyLockPin,
   unlockWithBiometric,
   setLockPin,
   disableLock,
+  disablePin,
   registerBiometric,
   disableBiometric,
   readLock,
@@ -5669,16 +5672,26 @@ function TradePinPanel({ user, refresh }) {
 }
 
 function AppLockPanel() {
-  const lock = readLock();
   const [pin, setPin] = useState("");
   const [confirm, setConfirm] = useState("");
   const [err, setErr] = useState("");
   const [ok, setOk] = useState("");
   const [busy, setBusy] = useState(false);
   const [tick, setTick] = useState(0);
-  const enabled = lock.enabled;
-  const bioOn = !!(lock.enabled && lock.bio);
-  const canBio = biometricSupported();
+  const [canBio, setCanBio] = useState(false);
+  const pinOn = lockHasPin();
+  const bioOn = lockHasBio();
+  const enabled = pinOn || bioOn;
+
+  useEffect(() => {
+    let live = true;
+    biometricSupported().then((okBio) => {
+      if (live) setCanBio(!!okBio);
+    }).catch(() => {
+      if (live) setCanBio(false);
+    });
+    return () => { live = false; };
+  }, [tick]);
 
   async function savePin(e) {
     e.preventDefault();
@@ -5697,7 +5710,7 @@ function AppLockPanel() {
       await setLockPin(pin);
       setPin("");
       setConfirm("");
-      setOk(enabled ? "تم تغيير رمز قفل التطبيق." : "تم تفعيل قفل التطبيق على هذا الجهاز.");
+      setOk(pinOn ? "تم تغيير رمز PIN." : "تم تفعيل قفل PIN على هذا الجهاز.");
       setTick((n) => n + 1);
     } catch (ex) {
       setErr(ex.message);
@@ -5706,11 +5719,19 @@ function AppLockPanel() {
     }
   }
 
-  async function turnOff() {
+  function turnOff() {
     setErr("");
     setOk("");
     disableLock();
     setOk("أُلغي قفل التطبيق على هذا الجهاز.");
+    setTick((n) => n + 1);
+  }
+
+  function turnOffPin() {
+    setErr("");
+    setOk("");
+    disablePin();
+    setOk(lockHasBio() ? "أُلغي رمز PIN. القفل بالبصمة فقط." : "أُلغي قفل التطبيق.");
     setTick((n) => n + 1);
   }
 
@@ -5721,10 +5742,10 @@ function AppLockPanel() {
     try {
       if (bioOn) {
         await disableBiometric();
-        setOk("أُلغيت البصمة. يُفتح القفل برمز PIN فقط.");
+        setOk(lockHasPin() ? "أُلغيت البصمة. القفل برمز PIN فقط." : "أُلغي قفل التطبيق.");
       } else {
         await registerBiometric();
-        setOk("تم تفعيل البصمة أو الوجه على هذا الجهاز.");
+        setOk("تم تفعيل قفل البصمة أو الوجه. يمكنك استخدامه دون رمز PIN.");
       }
       setTick((n) => n + 1);
     } catch (ex) {
@@ -5734,41 +5755,64 @@ function AppLockPanel() {
     }
   }
 
+  const status = !enabled ? "غير مفعّل" : pinOn && bioOn ? "PIN + بصمة" : bioOn ? "بصمة" : "PIN";
+
   return (
     <div className="profile-tab-body" key={tick}>
       <div className="section-title">
         <h3>قفل التطبيق</h3>
-        <span className={`pill ${enabled ? "green" : "gold"}`}>{enabled ? "مفعّل" : "غير مفعّل"}</span>
+        <span className={`pill ${enabled ? "green" : "gold"}`}>{status}</span>
       </div>
       <p className="hint" style={{ marginTop: 0 }}>
-        يحمي فتح التطبيق على هذا الجهاز برمز PIN أو البصمة. لا يُرسل الرمز إلى الخادم ويبقى محلياً. يُطلب بعد إغلاق التطبيق أو تبديل النافذة.
+        اختر واحداً أو الاثنين: رمز PIN أو البصمة/الوجه. كل خيار مستقل. لا يُرسل شيء إلى الخادم ويُطلب بعد إغلاق التطبيق.
       </p>
       {err && <div className="error">{err}</div>}
       {ok && <div className="notice">{ok}</div>}
-      <form className="form" onSubmit={savePin}>
-        <div className="form-grid pin-grid">
-          <label className="field">
-            <span>{enabled ? "رمز القفل الجديد" : "رمز القفل"}</span>
-            <input className="pin-input" type="password" inputMode="numeric" autoComplete="off" maxLength={6} value={pin} onChange={(e) => setPin(lockPinDigits(e.target.value))} placeholder="••••" required />
-          </label>
-          <label className="field">
-            <span>تأكيد الرمز</span>
-            <input className="pin-input" type="password" inputMode="numeric" autoComplete="off" maxLength={6} value={confirm} onChange={(e) => setConfirm(lockPinDigits(e.target.value))} placeholder="••••" required />
-          </label>
+      <div className="lock-choice-grid">
+        <div className={`lock-choice-card ${pinOn ? "on" : ""}`}>
+          <div className="section-title">
+            <h4>رمز PIN</h4>
+            <span className={`pill ${pinOn ? "green" : ""}`}>{pinOn ? "مفعّل" : "اختياري"}</span>
+          </div>
+          <form className="form" onSubmit={savePin}>
+            <div className="form-grid pin-grid">
+              <label className="field">
+                <span>{pinOn ? "رمز جديد" : "رمز القفل"}</span>
+                <input className="pin-input" type="password" inputMode="numeric" autoComplete="off" maxLength={6} value={pin} onChange={(e) => setPin(lockPinDigits(e.target.value))} placeholder="••••" required />
+              </label>
+              <label className="field">
+                <span>تأكيد الرمز</span>
+                <input className="pin-input" type="password" inputMode="numeric" autoComplete="off" maxLength={6} value={confirm} onChange={(e) => setConfirm(lockPinDigits(e.target.value))} placeholder="••••" required />
+              </label>
+            </div>
+            <div className="form-actions">
+              <button className="btn" disabled={busy}>{busy ? "جاري الحفظ..." : pinOn ? "تغيير PIN" : "تفعيل PIN فقط"}</button>
+              {pinOn && <IcoAction className="btn ghost" icon="close" onClick={turnOffPin}>إيقاف PIN</IcoAction>}
+            </div>
+          </form>
         </div>
-        <button className="btn" disabled={busy}>{busy ? "جاري الحفظ..." : enabled ? "تغيير رمز القفل" : "تفعيل قفل PIN"}</button>
-      </form>
-      {enabled && (
-        <div className="form-actions" style={{ marginTop: 12 }}>
+        <div className={`lock-choice-card ${bioOn ? "on" : ""}`}>
+          <div className="section-title">
+            <h4>البصمة / الوجه</h4>
+            <span className={`pill ${bioOn ? "green" : ""}`}>{bioOn ? "مفعّل" : canBio ? "اختياري" : "غير متاح"}</span>
+          </div>
+          <p className="hint" style={{ marginTop: 0 }}>
+            {canBio
+              ? "يفتح التطبيق بالبصمة أو الوجه مباشرة دون الحاجة لرمز PIN."
+              : "هذا الجهاز أو المتصفح لا يدعم البصمة. استخدم رمز PIN."}
+          </p>
           {canBio && (
             <IcoAction className={bioOn ? "btn dark" : "btn"} icon="shield" disabled={busy} onClick={toggleBio}>
-              {bioOn ? "إيقاف البصمة" : "تفعيل البصمة / الوجه"}
+              {bioOn ? "إيقاف البصمة" : "تفعيل البصمة فقط"}
             </IcoAction>
           )}
-          <IcoAction className="btn ghost" icon="close" onClick={turnOff}>إلغاء القفل</IcoAction>
+        </div>
+      </div>
+      {enabled && (
+        <div className="form-actions" style={{ marginTop: 12 }}>
+          <IcoAction className="btn ghost" icon="close" onClick={turnOff}>إلغاء كل القفل</IcoAction>
         </div>
       )}
-      {!canBio && enabled && <p className="hint">هذا المتصفح لا يدعم البصمة. استخدم رمز PIN.</p>}
     </div>
   );
 }
@@ -6637,14 +6681,18 @@ function AppLockGate() {
   useEffect(() => {
     if (!open) return undefined;
     const lock = readLock();
-    if (lock.bio && biometricSupported()) {
-      unlockWithBiometric().then(() => {
-        setOpen(false);
-        setPin("");
-        setErr("");
-      }).catch(() => {});
-    }
-    return undefined;
+    if (!lock.bio) return undefined;
+    let cancelled = false;
+    biometricSupported().then((okBio) => {
+      if (!okBio || cancelled) return;
+      return unlockWithBiometric();
+    }).then((ok) => {
+      if (cancelled || !ok) return;
+      setOpen(false);
+      setPin("");
+      setErr("");
+    }).catch(() => {});
+    return () => { cancelled = true; };
   }, [open]);
 
   if (!user || !open) return null;
@@ -6679,28 +6727,38 @@ function AppLockGate() {
   }
 
   const lock = readLock();
+  const pinOn = !!lock.pin;
+  const bioOn = !!lock.bio;
   return (
     <div className="totp-day-mask app-lock-mask">
-      <form className="card totp-day-card" onSubmit={submit}>
+      <form className="card totp-day-card" onSubmit={pinOn ? submit : (e) => e.preventDefault()}>
         <h2>التطبيق مقفل</h2>
-        <p>أدخل رمز PIN أو استخدم البصمة للمتابعة. الجلسة محفوظة ولن تُسجّل خروجك.</p>
-        <label className="field">
-          <span>رمز القفل</span>
-          <input
-            className="pin-input"
-            type="password"
-            inputMode="numeric"
-            autoComplete="off"
-            maxLength={6}
-            value={pin}
-            onChange={(e) => setPin(lockPinDigits(e.target.value))}
-            placeholder="••••"
-            required
-          />
-        </label>
+        <p>
+          {pinOn && bioOn
+            ? "أدخل رمز PIN أو استخدم البصمة للمتابعة. الجلسة محفوظة."
+            : bioOn
+              ? "استخدم البصمة أو الوجه للمتابعة. الجلسة محفوظة."
+              : "أدخل رمز PIN للمتابعة. الجلسة محفوظة."}
+        </p>
+        {pinOn && (
+          <label className="field">
+            <span>رمز القفل</span>
+            <input
+              className="pin-input"
+              type="password"
+              inputMode="numeric"
+              autoComplete="off"
+              maxLength={6}
+              value={pin}
+              onChange={(e) => setPin(lockPinDigits(e.target.value))}
+              placeholder="••••"
+              required
+            />
+          </label>
+        )}
         {err && <div className="error">{err}</div>}
-        <button className="btn block" disabled={busy}>{busy ? "جاري التحقق..." : "فتح"}</button>
-        {lock.bio && biometricSupported() && (
+        {pinOn && <button className="btn block" disabled={busy}>{busy ? "جاري التحقق..." : "فتح بـ PIN"}</button>}
+        {bioOn && (
           <IcoAction className="btn dark block" icon="shield" disabled={busy} onClick={bio}>فتح بالبصمة / الوجه</IcoAction>
         )}
       </form>
