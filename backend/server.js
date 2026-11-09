@@ -77,7 +77,8 @@ const {
   activeDepositWallet,
   treasuryByAddress,
   isPlatformTreasuryAddress,
-  publicSiteUrl
+  publicSiteUrl,
+  hydrateFromSupabase
 } = require("./db");
 const kycStore = require("./kycStore");
 const evidenceStore = require("./evidenceStore");
@@ -3180,21 +3181,29 @@ if (fs.existsSync(FRONTEND_DIST)) {
   });
 }
 
-app.listen(PORT, "0.0.0.0", () => {
-  const liveUrl = publicSiteUrl();
-  if (liveUrl && db.settings.webAppUrl !== liveUrl) {
-    db.settings.webAppUrl = liveUrl;
-    save();
-  }
-  console.log(`USDT Sham API on ${PORT}`);
-  if (liveUrl) console.log(`Public URL: ${liveUrl}`);
-  const apk = androidApkPath();
-  console.log(apk ? `Android APK: ${apk}` : "Android APK missing from releases/");
-  if (process.env.START_BOT === "1" || process.env.RENDER) {
-    const out = botManager.start();
-    if (!out.ok) console.log("bot:", out.error || "not started");
-    else console.log("USDT Sham Telegram bot started");
-  }
+async function boot() {
+  await hydrateFromSupabase();
+  app.listen(PORT, "0.0.0.0", () => {
+    const liveUrl = publicSiteUrl();
+    if (liveUrl && db.settings.webAppUrl !== liveUrl) {
+      db.settings.webAppUrl = liveUrl;
+      save();
+    }
+    console.log(`USDT Sham API on ${PORT}`);
+    if (liveUrl) console.log(`Public URL: ${liveUrl}`);
+    const apk = androidApkPath();
+    console.log(apk ? `Android APK: ${apk}` : "Android APK missing from releases/");
+    if (process.env.START_BOT === "1" || process.env.RENDER) {
+      const out = botManager.start();
+      if (!out.ok) console.log("bot:", out.error || "not started");
+      else console.log("USDT Sham Telegram bot started");
+    }
+  });
+}
+
+boot().catch((err) => {
+  console.error("boot failed:", err && err.message);
+  process.exit(1);
 });
 
 module.exports = { app };

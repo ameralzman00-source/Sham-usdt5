@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
+const { supabaseEnabled, pullSnapshot, queueSnapshot } = require("./supabaseStore");
+
 const BUNDLED_DATA_DIR = path.join(__dirname, "data");
 const DATA_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
@@ -1290,6 +1292,11 @@ function load() {
       save();
       return;
     }
+    if (supabaseEnabled()) {
+      console.log("no local db.json yet; waiting for Supabase snapshot before creating a new store");
+      db = emptyDb();
+      return;
+    }
     console.error("no existing user database; starting a new empty store (accounts are not deleted from a previous disk if DATA_DIR=/var/data is mounted)");
     db = emptyDb();
     const admin = seedDb();
@@ -1381,6 +1388,48 @@ function saveLocked() {
   const tmp = `${DB_PATH}.tmp`;
   fs.writeFileSync(tmp, JSON.stringify(db, null, 2));
   fs.renameSync(tmp, DB_PATH);
+  queueSnapshot(db);
+}
+
+async function hydrateFromSupabase() {
+  if (!supabaseEnabled()) {
+    console.log("Supabase not configured; using local disk only");
+    return false;
+  }
+  try {
+    const remote = await pullSnapshot();
+    if (!remote) {
+      if ((db.users || []).length) queueSnapshot(db);
+      else {
+        const admin = seedDb();
+        const keepAdmin = (admin.users || []).find((u) => u && u.isAdmin);
+        if (keepAdmin && !(db.users || []).length) {
+          db = emptyDb();
+          db.users = [keepAdmin];
+          db.wallets = (admin.wallets || []).filter((w) => w.userId === keepAdmin.id);
+          save();
+        }
+      }
+      return false;
+    }
+    const migrated = migrate(remote);
+    const remoteUsers = (migrated.users || []).length;
+    const localUsers = (db.users || []).length;
+    if (remoteUsers && remoteUsers >= localUsers) {
+      applyDisk(migrated);
+      saveLocked();
+      console.log(`Supabase restored ${remoteUsers} users into ${DB_PATH}`);
+      return true;
+    }
+    if (localUsers) {
+      queueSnapshot(db);
+      console.log(`kept local ${localUsers} users and synced them to Supabase`);
+    }
+    return false;
+  } catch (err) {
+    console.error("supabase load:", err && err.message);
+    return false;
+  }
 }
 
 function save() {
@@ -2251,6 +2300,8 @@ module.exports = {
   save,
   load,
   reload,
+  hydrateFromSupabase,
+  supabaseEnabled,
   publicSiteUrl,
   resolveWebAppUrl,
   uid,

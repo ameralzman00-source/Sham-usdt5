@@ -18,6 +18,10 @@ services:
         sync: false
       - key: WEB_APP_URL
         sync: false
+      - key: USER_SUPABASE_URL
+        sync: false
+      - key: USER_SUPABASE_SERVICE_KEY
+        sync: false
     disk:
       name: usdt-sham-data
       mountPath: /var/data
