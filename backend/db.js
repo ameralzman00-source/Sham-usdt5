@@ -2,9 +2,10 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
+const BUNDLED_DATA_DIR = path.join(__dirname, "data");
 const DATA_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
-  : path.join(__dirname, "data");
+  : BUNDLED_DATA_DIR;
 const DB_PATH = path.join(DATA_DIR, "db.json");
 const LEGACY_PREVIEW_HOST = "monkeycode-ai.live";
 
@@ -1261,16 +1262,42 @@ function loadFromBackups() {
   return null;
 }
 
+function recoverLiveDb() {
+  const recovered = loadFromBackups();
+  if (recovered && (recovered.users || []).length) return recovered;
+  if (path.resolve(DATA_DIR) === path.resolve(BUNDLED_DATA_DIR)) return recovered;
+  for (const file of [path.join(BUNDLED_DATA_DIR, "db.json"), path.join(BUNDLED_DATA_DIR, "db.json.bak"), path.join(BUNDLED_DATA_DIR, "db.json.bak2")]) {
+    try {
+      const parsed = parseDbFile(file);
+      if (parsed && (parsed.users || []).length) {
+        console.error(`migrating ${(parsed.users || []).length} users from ${file} into ${DB_PATH}`);
+        return parsed;
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+  return recovered;
+}
+
 function load() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  console.log(`USDT Sham data: ${DB_PATH}`);
   if (!fs.existsSync(DB_PATH)) {
-    const recovered = loadFromBackups();
+    const recovered = recoverLiveDb();
     if (recovered) {
       db = recovered;
       save();
       return;
     }
-    db = seedDb();
+    console.error("no existing user database; starting a new empty store (accounts are not deleted from a previous disk if DATA_DIR=/var/data is mounted)");
+    db = emptyDb();
+    const admin = seedDb();
+    const keepAdmin = (admin.users || []).find((u) => u && u.isAdmin);
+    if (keepAdmin) {
+      db.users = [keepAdmin];
+      db.wallets = (admin.wallets || []).filter((w) => w.userId === keepAdmin.id);
+    }
     save();
     return;
   }
@@ -1280,7 +1307,7 @@ function load() {
     save();
   } catch (err) {
     console.error("db.json parse failed, keeping user data via backup:", err && err.message);
-    const recovered = loadFromBackups();
+    const recovered = recoverLiveDb();
     if (recovered) {
       db = recovered;
       save();

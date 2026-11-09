@@ -114,6 +114,12 @@
 # KYC uploads
 backend/uploads/
 
+# Live user database must stay on the Render disk, never in git
+backend/data/db.json
+backend/data/db.json.bak
+backend/data/db.json.bak2
+backend/data/db.json.tmp
+
 # Temporary files
 *.tmp
 *.temp

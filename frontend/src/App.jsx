@@ -26,6 +26,7 @@ import {
   markNoticesSeen,
   showNativeNotice
 } from "./nativeNotify.js";
+import { TONES, readToneId, saveToneId, playTone } from "./notifyTones.js";
 
 const STATUS = {
   pending_payment: "بانتظار الدفع",
@@ -2710,6 +2711,8 @@ function NotificationsPage() {
   const [unread, setUnread] = useState(0);
   const [err, setErr] = useState("");
   const [notifyHint, setNotifyHint] = useState("");
+  const [toneId, setToneId] = useState(() => readToneId());
+  const currentTone = TONES.find((t) => t.id === toneId) || TONES[0];
 
   async function load() {
     const d = await api("/api/notifications");
@@ -2750,6 +2753,35 @@ function NotificationsPage() {
       </PageHead>
       {notifyHint && <div className="success" style={{ marginBottom: 12 }}>{notifyHint}</div>}
       {err && <div className="error" style={{ marginBottom: 12 }}>{err}</div>}
+      <div className="card" style={{ marginBottom: 14 }}>
+        <div className="section-title">
+          <h3>نغمة التنبيه</h3>
+          <span className="pill gold">{currentTone.name}</span>
+        </div>
+        <p className="hint" style={{ marginTop: 0 }}>
+          النغمة الحالية: {currentTone.name}. اختر نغمة ثم اضغط معاينة لسماعها.
+        </p>
+        <div className="tone-list">
+          {TONES.map((tone) => (
+            <button
+              key={tone.id}
+              type="button"
+              className={`tone-item ${tone.id === toneId ? "on" : ""}`}
+              onClick={() => {
+                const next = saveToneId(tone.id);
+                setToneId(next.id);
+                playTone(next.id);
+              }}
+            >
+              <b>{tone.name}</b>
+              <small>{tone.hint}</small>
+            </button>
+          ))}
+        </div>
+        <div className="form-actions" style={{ marginTop: 12 }}>
+          <button type="button" className="btn sm" onClick={() => playTone(toneId)}>معاينة النغمة</button>
+        </div>
+      </div>
       <div className="card" style={{ padding: 0 }}>
         {items.length === 0 ? (
           <Empty title="لا توجد إشعارات" text="ستظهر هنا إشعارات الصفقات والإيداع والسحب واعتماد التاجر." />

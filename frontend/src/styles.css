@@ -4392,3 +4392,48 @@ body.tg-app .ad-card:hover {
     padding: 12px;
   }
 }
+
+.tone-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tone-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: right;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  cursor: pointer;
+}
+
+.tone-item b {
+  font-size: 14px;
+}
+
+.tone-item small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.tone-item.on {
+  border-color: var(--gold);
+  background: rgba(232, 197, 71, 0.08);
+}
+
+.tone-item.on b {
+  color: var(--gold);
+}
+
+@media (max-width: 520px) {
+  .tone-list {
+    grid-template-columns: 1fr;
+  }
+}

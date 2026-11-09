@@ -1,3 +1,5 @@
+import { playTone } from "./notifyTones.js";
+
 const SEEN_KEY = "pexora_seen_notices";
 
 function nativePlugin() {
@@ -110,41 +112,8 @@ export function armNotifyPermission() {
   document.addEventListener("keydown", once, true);
 }
 
-function vibrateAlert() {
-  try {
-    if (navigator.vibrate) navigator.vibrate([450, 180, 450, 180, 700]);
-  } catch {
-    /* ignore */
-  }
-}
-
 function playAlertTone() {
-  vibrateAlert();
-  try {
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    if (!Ctx) return;
-    const ctx = new Ctx();
-    const now = ctx.currentTime;
-    const notes = [880, 1174, 880];
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(0.22, now + i * 0.22 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.22 + 0.2);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now + i * 0.22);
-      osc.stop(now + i * 0.22 + 0.22);
-    });
-    setTimeout(() => {
-      try { ctx.close(); } catch { /* ignore */ }
-    }, 1200);
-  } catch {
-    /* ignore */
-  }
+  playTone();
 }
 
 export async function showNativeNotice({ title, body, href }) {
