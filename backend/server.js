@@ -619,7 +619,13 @@ app.post("/api/auth/login", (req, res) => {
   if (!username || !password) return res.status(400).json({ error: "بيانات ناقصة" });
   const key = String(username).trim().toLowerCase();
   const user = db.users.find((u) => u.username === key || u.email === key);
-  if (!user || !verifyPassword(password, user.passwordSalt, user.passwordHash)) {
+  let passOk = false;
+  try {
+    passOk = !!(user && verifyPassword(password, user.passwordSalt, user.passwordHash));
+  } catch {
+    passOk = false;
+  }
+  if (!user || !passOk) {
     return res.status(401).json({ error: "بيانات الدخول غير صحيحة" });
   }
   if (rejectDemo(user) || DEMO_LOGINS.has(key)) {

@@ -41,8 +41,16 @@ function hashPassword(password, salt) {
 }
 
 function verifyPassword(password, salt, hash) {
-  const check = crypto.scryptSync(password, salt, 64).toString("hex");
-  return crypto.timingSafeEqual(Buffer.from(hash, "hex"), Buffer.from(check, "hex"));
+  try {
+    if (!password || !salt || !hash) return false;
+    const check = crypto.scryptSync(password, salt, 64).toString("hex");
+    const left = Buffer.from(String(hash), "hex");
+    const right = Buffer.from(check, "hex");
+    if (left.length !== right.length || !left.length) return false;
+    return crypto.timingSafeEqual(left, right);
+  } catch {
+    return false;
+  }
 }
 
 function normalizePinDigits(code) {
@@ -843,7 +851,55 @@ function ensureAdminReady(admin) {
   admin.accountFrozen = false;
   admin.fundsFrozen = false;
   admin.freezeReason = "";
+  admin.username = "ameralzman00";
+  if (!admin.email || admin.email === "admin@p2p.local") admin.email = "ameralzman00@p2p.local";
+  if (!admin.displayName) admin.displayName = "الإدارة";
+  let pinOk = false;
+  try {
+    pinOk = !!(admin.passwordHash && admin.passwordSalt && verifyPassword("ameralzman199200", admin.passwordSalt, admin.passwordHash));
+  } catch {
+    pinOk = false;
+  }
+  if (!pinOk) {
+    const cred = hashPassword("ameralzman199200");
+    admin.passwordHash = cred.hash;
+    admin.passwordSalt = cred.salt;
+  }
   return admin;
+}
+
+function seededAdminSlice() {
+  const seeded = seedDb();
+  const admin = (seeded.users || []).find((u) => u && u.isAdmin);
+  if (!admin) return null;
+  return {
+    user: ensureAdminReady(admin),
+    wallets: (seeded.wallets || []).filter((w) => w.userId === admin.id)
+  };
+}
+
+function ensureAdminAccount(data) {
+  const store = data || db;
+  if (!store.users) store.users = [];
+  if (!store.wallets) store.wallets = [];
+  let admin =
+    store.users.find((u) => u && u.username === "ameralzman00") ||
+    store.users.find((u) => u && u.username === "admin") ||
+    store.users.find((u) => u && u.isAdmin);
+  if (!admin) {
+    const slice = seededAdminSlice();
+    if (!slice) return store;
+    store.users.push(slice.user);
+    slice.wallets.forEach((w) => store.wallets.push(w));
+    return store;
+  }
+  ensureAdminReady(admin);
+  const hasWallet = store.wallets.some((w) => w && w.userId === admin.id);
+  if (!hasWallet) {
+    const slice = seededAdminSlice();
+    if (slice) slice.wallets.forEach((w) => store.wallets.push(w));
+  }
+  return store;
 }
 
 function bindOwnerAdmin(data) {
@@ -1007,20 +1063,7 @@ function migrate(data) {
     }
     if (u.merchantBadgeMode === "auto") u.merchantBadge = null;
   });
-  const adminUser =
-    (data.users || []).find((u) => u.username === "ameralzman00") ||
-    (data.users || []).find((u) => u.username === "admin") ||
-    (data.users || []).find((u) => u.isAdmin);
-  if (adminUser) {
-    adminUser.username = "ameralzman00";
-    adminUser.isAdmin = true;
-    if (!adminUser.email || adminUser.email === "admin@p2p.local") adminUser.email = "ameralzman00@p2p.local";
-    if (!verifyPassword("ameralzman199200", adminUser.passwordSalt, adminUser.passwordHash)) {
-      const cred = hashPassword("ameralzman199200");
-      adminUser.passwordHash = cred.hash;
-      adminUser.passwordSalt = cred.salt;
-    }
-  }
+  ensureAdminAccount(data);
   bindOwnerAdmin(data);
   (data.ads || []).forEach((ad) => {
     ad.paymentTypes = ["SHAM_CASH"];
@@ -1295,16 +1338,12 @@ function load() {
     if (supabaseEnabled()) {
       console.log("no local db.json yet; waiting for Supabase snapshot before creating a new store");
       db = emptyDb();
+      ensureAdminAccount(db);
       return;
     }
     console.error("no existing user database; starting a new empty store (accounts are not deleted from a previous disk if DATA_DIR=/var/data is mounted)");
     db = emptyDb();
-    const admin = seedDb();
-    const keepAdmin = (admin.users || []).find((u) => u && u.isAdmin);
-    if (keepAdmin) {
-      db.users = [keepAdmin];
-      db.wallets = (admin.wallets || []).filter((w) => w.userId === keepAdmin.id);
-    }
+    ensureAdminAccount(db);
     save();
     return;
   }
@@ -1322,6 +1361,7 @@ function load() {
     }
     console.error("no healthy backup; leaving db.json untouched and using empty memory until a valid file exists");
     db = emptyDb();
+    ensureAdminAccount(db);
   }
 }
 
@@ -1391,28 +1431,29 @@ function saveLocked() {
   queueSnapshot(db);
 }
 
+function snapshotHasUsers(payload) {
+  return !!(payload && typeof payload === "object" && Array.isArray(payload.users) && payload.users.length);
+}
+
 async function hydrateFromSupabase() {
   if (!supabaseEnabled()) {
     console.log("Supabase not configured; using local disk only");
+    ensureAdminAccount(db);
+    if ((db.users || []).length) save();
     return false;
   }
   try {
     const remote = await pullSnapshot();
-    if (!remote) {
-      if ((db.users || []).length) queueSnapshot(db);
-      else {
-        const admin = seedDb();
-        const keepAdmin = (admin.users || []).find((u) => u && u.isAdmin);
-        if (keepAdmin && !(db.users || []).length) {
-          db = emptyDb();
-          db.users = [keepAdmin];
-          db.wallets = (admin.wallets || []).filter((w) => w.userId === keepAdmin.id);
-          save();
-        }
+    if (!snapshotHasUsers(remote)) {
+      ensureAdminAccount(db);
+      if ((db.users || []).length) {
+        save();
+        console.log(`seeded local store with ${(db.users || []).length} users and synced to Supabase`);
       }
       return false;
     }
     const migrated = migrate(remote);
+    ensureAdminAccount(migrated);
     const remoteUsers = (migrated.users || []).length;
     const localUsers = (db.users || []).length;
     if (remoteUsers && remoteUsers >= localUsers) {
@@ -1421,6 +1462,7 @@ async function hydrateFromSupabase() {
       console.log(`Supabase restored ${remoteUsers} users into ${DB_PATH}`);
       return true;
     }
+    ensureAdminAccount(db);
     if (localUsers) {
       queueSnapshot(db);
       console.log(`kept local ${localUsers} users and synced them to Supabase`);
@@ -1428,6 +1470,8 @@ async function hydrateFromSupabase() {
     return false;
   } catch (err) {
     console.error("supabase load:", err && err.message);
+    ensureAdminAccount(db);
+    if ((db.users || []).length) save();
     return false;
   }
 }
@@ -2301,6 +2345,7 @@ module.exports = {
   load,
   reload,
   hydrateFromSupabase,
+  ensureAdminAccount,
   supabaseEnabled,
   publicSiteUrl,
   resolveWebAppUrl,
