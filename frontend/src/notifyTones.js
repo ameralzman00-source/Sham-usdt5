@@ -1,45 +1,136 @@
-const TONE_KEY = "pexora_alert_tone";
+const META_KEY = "pexora_alert_tone_meta";
+const DB_NAME = "pexora_tones";
+const STORE = "files";
+const FILE_KEY = "custom";
+const MAX_BYTES = 4 * 1024 * 1024;
 
-export const TONES = [
-  { id: "sham", name: "شام ذهبية", hint: "النغمة الحالية للتطبيق", notes: [[880, 0], [1174, 0.22], [880, 0.44]] },
-  { id: "bell", name: "جرس", hint: "رنين واضح", notes: [[784, 0], [988, 0.18], [1175, 0.36]] },
-  { id: "ping", name: "نبضة", hint: "تنبيه قصير", notes: [[1320, 0], [990, 0.16]] },
-  { id: "cash", name: "صفقة", hint: "مناسبة للصفقات", notes: [[523, 0], [659, 0.14], [784, 0.28], [1047, 0.44]] },
-  { id: "alert", name: "إنذار", hint: "أقوى وأوضح", notes: [[740, 0], [740, 0.2], [988, 0.4]] },
-  { id: "silent", name: "صامت", hint: "اهتزاز فقط بدون صوت", notes: [] }
-];
+let audioEl = null;
+let objectUrl = "";
 
-export function readToneId() {
+function readMeta() {
   try {
-    const id = localStorage.getItem(TONE_KEY) || "sham";
-    return TONES.some((t) => t.id === id) ? id : "sham";
+    const raw = localStorage.getItem(META_KEY);
+    if (!raw) return { mode: "unset" };
+    const parsed = JSON.parse(raw);
+    if (parsed && parsed.mode === "silent") return { mode: "silent" };
+    if (parsed && parsed.mode === "custom" && parsed.name) {
+      return { mode: "custom", name: String(parsed.name), type: parsed.type || "audio/mpeg" };
+    }
+    return { mode: "unset" };
   } catch {
-    return "sham";
+    return { mode: "unset" };
+  }
+}
+
+function writeMeta(meta) {
+  try {
+    if (!meta || meta.mode === "unset") localStorage.removeItem(META_KEY);
+    else localStorage.setItem(META_KEY, JSON.stringify(meta));
+  } catch {
+    /* ignore */
+  }
+}
+
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error || new Error("تعذر فتح تخزين النغمة"));
+  });
+}
+
+async function putFile(blob) {
+  const db = await openDb();
+  try {
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, "readwrite");
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error || new Error("تعذر حفظ النغمة"));
+      tx.objectStore(STORE).put(blob, FILE_KEY);
+    });
+  } finally {
+    db.close();
+  }
+}
+
+async function getFile() {
+  const db = await openDb();
+  try {
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, "readonly");
+      const req = tx.objectStore(STORE).get(FILE_KEY);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error || new Error("تعذر قراءة النغمة"));
+    });
+  } finally {
+    db.close();
+  }
+}
+
+async function deleteFile() {
+  try {
+    const db = await openDb();
+    try {
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE, "readwrite");
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error || new Error("تعذر حذف النغمة"));
+        tx.objectStore(STORE).delete(FILE_KEY);
+      });
+    } finally {
+      db.close();
+    }
+  } catch {
+    /* ignore */
   }
 }
 
 export function readTone() {
-  const id = readToneId();
-  return TONES.find((t) => t.id === id) || TONES[0];
+  const meta = readMeta();
+  if (meta.mode === "silent") return { id: "silent", name: "صامت", hint: "اهتزاز فقط" };
+  if (meta.mode === "custom") return { id: "custom", name: meta.name, hint: "من جهازك" };
+  return { id: "unset", name: "غير معيّنة", hint: "اختر ملفاً من جهازك" };
+}
+
+export function readToneId() {
+  return readTone().id;
 }
 
 export function saveToneId(id) {
-  const tone = TONES.find((t) => t.id === id) || TONES[0];
-  try {
-    localStorage.setItem(TONE_KEY, tone.id);
-  } catch {
-    /* ignore */
+  if (id === "silent") {
+    writeMeta({ mode: "silent" });
+    return readTone();
   }
-  return tone;
+  return readTone();
 }
 
-let audioCtx;
+export async function saveCustomTone(file) {
+  if (!file) throw new Error("اختر ملفاً صوتياً من جهازك.");
+  const type = String(file.type || "");
+  const name = String(file.name || "نغمة مخصصة");
+  if (file.size > MAX_BYTES) throw new Error("الملف أكبر من 4 ميغابايت. اختر نغمة أقصر.");
+  const okType = !type || type.startsWith("audio/") || type === "video/mp4";
+  if (!okType) throw new Error("الملف ليس صوتياً. اختر mp3 أو m4a أو wav أو ogg.");
+  await putFile(file);
+  writeMeta({ mode: "custom", name, type: type || "audio/mpeg" });
+  return readTone();
+}
 
-function context() {
-  const Ctx = window.AudioContext || window.webkitAudioContext;
-  if (!Ctx) return null;
-  if (!audioCtx || audioCtx.state === "closed") audioCtx = new Ctx();
-  return audioCtx;
+export async function clearCustomTone() {
+  await deleteFile();
+  writeMeta({ mode: "unset" });
+  stopTone();
+  return readTone();
+}
+
+export async function setSilentTone() {
+  writeMeta({ mode: "silent" });
+  stopTone();
+  return readTone();
 }
 
 export function vibrateAlert() {
@@ -50,28 +141,40 @@ export function vibrateAlert() {
   }
 }
 
-export function playTone(id) {
-  const tone = TONES.find((t) => t.id === id) || readTone();
-  vibrateAlert();
-  if (!tone.notes.length) return;
+function stopTone() {
   try {
-    const ctx = context();
-    if (!ctx) return;
-    if (ctx.state === "suspended") ctx.resume().catch(() => {});
-    const now = ctx.currentTime;
-    tone.notes.forEach(([freq, offset]) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.0001, now + offset);
-      gain.gain.exponentialRampToValueAtTime(0.22, now + offset + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.2);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now + offset);
-      osc.stop(now + offset + 0.22);
-    });
+    if (audioEl) {
+      audioEl.pause();
+      audioEl.removeAttribute("src");
+      audioEl.load();
+    }
+  } catch {
+    /* ignore */
+  }
+  if (objectUrl) {
+    try {
+      URL.revokeObjectURL(objectUrl);
+    } catch {
+      /* ignore */
+    }
+    objectUrl = "";
+  }
+}
+
+export async function playTone() {
+  const meta = readMeta();
+  vibrateAlert();
+  if (meta.mode !== "custom") return;
+  try {
+    const blob = await getFile();
+    if (!blob) return;
+    stopTone();
+    objectUrl = URL.createObjectURL(blob);
+    if (!audioEl) audioEl = new Audio();
+    audioEl.src = objectUrl;
+    audioEl.currentTime = 0;
+    const play = audioEl.play();
+    if (play && play.catch) play.catch(() => {});
   } catch {
     /* ignore */
   }

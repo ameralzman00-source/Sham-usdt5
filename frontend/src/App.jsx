@@ -29,7 +29,7 @@ import {
   markNoticesSeen,
   showNativeNotice
 } from "./nativeNotify.js";
-import { TONES, readToneId, saveToneId, playTone } from "./notifyTones.js";
+import { readTone, saveCustomTone, setSilentTone, clearCustomTone, playTone } from "./notifyTones.js";
 
 const STATUS = {
   pending_payment: "بانتظار الدفع",
@@ -2714,8 +2714,9 @@ function NotificationsPage() {
   const [unread, setUnread] = useState(0);
   const [err, setErr] = useState("");
   const [notifyHint, setNotifyHint] = useState("");
-  const [toneId, setToneId] = useState(() => readToneId());
-  const currentTone = TONES.find((t) => t.id === toneId) || TONES[0];
+  const [tone, setTone] = useState(() => readTone());
+  const [toneBusy, setToneBusy] = useState(false);
+  const [toneMsg, setToneMsg] = useState("");
 
   async function load() {
     const d = await api("/api/notifications");
@@ -2759,30 +2760,66 @@ function NotificationsPage() {
       <div className="card" style={{ marginBottom: 14 }}>
         <div className="section-title">
           <h3>نغمة التنبيه</h3>
-          <span className="pill gold">{currentTone.name}</span>
+          <span className={`pill ${tone.id === "custom" ? "green" : "gold"}`}>{tone.name}</span>
         </div>
         <p className="hint" style={{ marginTop: 0 }}>
-          النغمة الحالية: {currentTone.name}. اختر نغمة ثم اضغط معاينة لسماعها.
+          اختر نغمة من ملفات جهازك (mp3 أو m4a أو wav أو ogg حتى 4 ميغابايت). تُحفظ محلياً على هذا الجهاز.
         </p>
-        <div className="tone-list">
-          {TONES.map((tone) => (
+        {toneMsg && <div className={toneMsg.startsWith("تعذر") || toneMsg.includes("أكبر") || toneMsg.includes("ليس") ? "error" : "notice"}>{toneMsg}</div>}
+        <div className="form-actions">
+          <label className="btn sm">
+            {toneBusy ? "جاري الحفظ..." : tone.id === "custom" ? "تغيير النغمة من الجهاز" : "اختيار نغمة من الجهاز"}
+            <input
+              type="file"
+              accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,.mpeg"
+              hidden
+              disabled={toneBusy}
+              onChange={async (e) => {
+                const file = e.target.files && e.target.files[0];
+                e.target.value = "";
+                if (!file) return;
+                setToneBusy(true);
+                setToneMsg("");
+                try {
+                  const next = await saveCustomTone(file);
+                  setTone(next);
+                  setToneMsg(`تم حفظ «${next.name}» كنغمة تنبيه.`);
+                  await playTone();
+                } catch (ex) {
+                  setToneMsg(ex.message || "تعذر حفظ النغمة.");
+                } finally {
+                  setToneBusy(false);
+                }
+              }}
+            />
+          </label>
+          <button type="button" className="btn ghost sm" disabled={toneBusy || tone.id !== "custom"} onClick={() => playTone()}>معاينة</button>
+          <button
+            type="button"
+            className="btn ghost sm"
+            disabled={toneBusy}
+            onClick={async () => {
+              const next = await setSilentTone();
+              setTone(next);
+              setToneMsg("التنبيه صامت مع اهتزاز فقط.");
+            }}
+          >
+            صامت
+          </button>
+          {tone.id !== "unset" && (
             <button
-              key={tone.id}
               type="button"
-              className={`tone-item ${tone.id === toneId ? "on" : ""}`}
-              onClick={() => {
-                const next = saveToneId(tone.id);
-                setToneId(next.id);
-                playTone(next.id);
+              className="btn ghost sm"
+              disabled={toneBusy}
+              onClick={async () => {
+                const next = await clearCustomTone();
+                setTone(next);
+                setToneMsg("أُلغيت النغمة المخصصة.");
               }}
             >
-              <b>{tone.name}</b>
-              <small>{tone.hint}</small>
+              إزالة
             </button>
-          ))}
-        </div>
-        <div className="form-actions" style={{ marginTop: 12 }}>
-          <button type="button" className="btn sm" onClick={() => playTone(toneId)}>معاينة النغمة</button>
+          )}
         </div>
       </div>
       <div className="card" style={{ padding: 0 }}>
